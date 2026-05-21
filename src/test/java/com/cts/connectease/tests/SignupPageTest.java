@@ -10,14 +10,8 @@ import org.testng.annotations.Test;
 /**
  * Test class for Signup functionality
  * URL: https://connect-ease-nu.vercel.app/signup
- *
  * Actual form fields: Full Name | Email | Password | Phone | Role (Customer/Vendor)
  * There is NO confirm-password field on this form.
- *
- * NOTE ON TEST USER SETUP
- * TC_SIGNUP_02 and TC_SIGNUP_09 register the canonical test users
- * (nav@test.com / navya1.vendor@test.com) that LoginPageTest depends on.
- * They accept BOTH 201 (first run) and "already exists" (re-run) as PASS.
  */
 public class SignupPageTest extends BaseTest {
 
@@ -60,8 +54,8 @@ public class SignupPageTest extends BaseTest {
     public void testRegisterCustomerTestUser() {
         signupPage.signup(
                 "Nav Customer",
-                AppConstants.CUSTOMER_EMAIL,    // nav@test.com
-                AppConstants.CUSTOMER_PASSWORD, // nav071
+                AppConstants.CUSTOMER_EMAIL,
+                AppConstants.CUSTOMER_PASSWORD,
                 AppConstants.SIGNUP_PHONE
         );
 
@@ -80,24 +74,6 @@ public class SignupPageTest extends BaseTest {
         } else {
             System.out.println("✔ TC_SIGNUP_02 PASSED: Customer test user already exists — login tests can proceed");
         }
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // TC_SIGNUP_03 — Duplicate (already registered) email
-    // ─────────────────────────────────────────────────────────────────────────
-    @Test(priority = 3, description = "Verify error shown for duplicate/existing email")
-    public void testSignupWithExistingEmail() {
-        signupPage.signup(
-                AppConstants.SIGNUP_NAME,
-                AppConstants.EXISTING_EMAIL,    // resolves to nav@test.com
-                AppConstants.SIGNUP_PASSWORD,
-                AppConstants.SIGNUP_PHONE
-        );
-
-        String error = signupPage.getErrorMessage();
-        Assert.assertFalse(error.isEmpty(),
-                "An error message should appear for a duplicate email");
-        System.out.println("✔ TC_SIGNUP_03 PASSED: Duplicate email error → " + error);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

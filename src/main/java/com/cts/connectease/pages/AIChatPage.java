@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,7 +102,6 @@ public class AIChatPage {
             for (By loc : pageReadyLocators) {
                 if (!d.findElements(loc).isEmpty()) return true;
             }
-            // Fallback: any input is present
             return !d.findElements(By.cssSelector("input, textarea")).isEmpty();
         });
     }
@@ -115,11 +115,51 @@ public class AIChatPage {
         return !driver.findElements(By.cssSelector("input, textarea")).isEmpty();
     }
 
-    public boolean isQueryInputVisible() { return findFirst(queryInputLocators) != null; }
+    public boolean isQueryInputVisible()  { return findFirst(queryInputLocators) != null; }
+    public boolean isSendButtonVisible()  { return findFirst(sendButtonLocators) != null; }
+    public boolean isOnAiChatPage()       { return driver.getCurrentUrl().contains("/ai-chat"); }
 
-    public boolean isSendButtonVisible() { return findFirst(sendButtonLocators) != null; }
+    /** Returns true if the AI chat assistant panel / frame is visible. */
+    public boolean isAiAssistantFrameVisible() {
+        By[] locators = {
+            By.cssSelector("[class*='ai-assistant' i], [class*='assistant-panel' i], [class*='chat-panel' i]"),
+            By.cssSelector(".chat-container, [class*='chat-container']"),
+            By.cssSelector("[class*='ai-chat' i]")
+        };
+        for (By loc : locators) {
+            try { if (!driver.findElements(loc).isEmpty()) return true; } catch (Exception ignored) {}
+        }
+        return isPageDisplayed();
+    }
 
-    public boolean isOnAiChatPage() { return driver.getCurrentUrl().contains("/ai-chat"); }
+    /** Returns true if the Smart Recommendations panel is visible. */
+    public boolean isRecommendationsFrameVisible() {
+        By[] locators = {
+            By.cssSelector("[class*='recommendation' i], [class*='smart-rec' i], [class*='results-panel' i]"),
+            By.cssSelector(".service-card, [class*='service-card'], [class*='result-card']"),
+            By.cssSelector("[class*='suggestion' i]")
+        };
+        for (By loc : locators) {
+            try { if (!driver.findElements(loc).isEmpty()) return true; } catch (Exception ignored) {}
+        }
+        return false;
+    }
+
+    /** Returns the chat input WebElement (or null if not found). */
+    public WebElement getChatInput() { return findFirst(queryInputLocators); }
+
+    /** Clicks the Send button, falling back to JS click if needed. */
+    public void clickSendButton() {
+        WebElement btn = findFirst(sendButtonLocators);
+        if (btn != null) {
+            highlight(btn);
+            try { btn.click(); }
+            catch (Exception e) { ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn); }
+        }
+    }
+
+    /** Alias for {@link #askQuestion(String)} — types and submits a query. */
+    public void submitQuery(String query) { askQuestion(query); }
 
     public int getAiResponseCount() {
         return (int) driver.findElements(aiResponseMessages).stream().filter(e -> {
@@ -131,6 +171,60 @@ public class AIChatPage {
         return driver.findElements(serviceCards).stream().anyMatch(e -> {
             try { return e.isDisplayed(); } catch (Exception ex) { return false; }
         });
+    }
+
+    /**
+     * Returns the full text of the LAST (most recent) visible AI response bubble.
+     * Falls back through alternative CSS patterns before giving up.
+     * Returns an empty string when no response is visible yet.
+     */
+    public String getLastAiResponseText() {
+        // Walk all matching elements; keep the last one that is visible
+        List<WebElement> responses = driver.findElements(aiResponseMessages);
+        WebElement lastVisible = null;
+        for (WebElement e : responses) {
+            try { if (e.isDisplayed()) lastVisible = e; } catch (Exception ignored) {}
+        }
+
+        // Fallback locators when the primary set matches nothing
+        if (lastVisible == null) {
+            By[] fallbacks = {
+                By.cssSelector("[class*='message']:not(input):not(textarea)"),
+                By.cssSelector("[class*='answer'], [class*='reply']"),
+                By.cssSelector("[class*='assistant' i], [class*='ai-text' i]")
+            };
+            outer:
+            for (By loc : fallbacks) {
+                for (WebElement e : driver.findElements(loc)) {
+                    try {
+                        if (e.isDisplayed() && !e.getText().trim().isEmpty()) {
+                            lastVisible = e;
+                            break outer;
+                        }
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
+
+        if (lastVisible == null) return "";
+        try { return lastVisible.getText().trim(); } catch (Exception e) { return ""; }
+    }
+
+    /**
+     * Returns the text of ALL currently visible AI response messages in order.
+     * Useful for multi-turn conversation assertions.
+     */
+    public List<String> getAllAiResponseTexts() {
+        List<String> texts = new ArrayList<>();
+        for (WebElement e : driver.findElements(aiResponseMessages)) {
+            try {
+                if (e.isDisplayed()) {
+                    String t = e.getText().trim();
+                    if (!t.isEmpty()) texts.add(t);
+                }
+            } catch (Exception ignored) {}
+        }
+        return texts;
     }
 
     // ── Actions ───────────────────────────────────────────────────────────────
@@ -156,19 +250,17 @@ public class AIChatPage {
 
     /**
      * Waits up to 30 s for an AI response to appear (AI calls can be slow).
-     * Returns true if at least one response message is visible.
+     * Returns true if at least one new response message appeared.
      */
     public boolean waitForAiResponse(int previousCount) {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(30)).until(d -> {
-                // Wait for loading spinner to disappear first
                 List<WebElement> spinners = d.findElements(loadingIndicator);
                 boolean loading = spinners.stream().anyMatch(e -> {
                     try { return e.isDisplayed(); } catch (Exception ex) { return false; }
                 });
                 if (loading) return false;
 
-                // Then wait for a new message to appear
                 long count = d.findElements(aiResponseMessages).stream().filter(e -> {
                     try { return e.isDisplayed(); } catch (Exception ex) { return false; }
                 }).count();

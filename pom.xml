@@ -18,6 +18,7 @@
         <webdrivermanager.version>5.7.0</webdrivermanager.version>
         <restassured.version>5.4.0</restassured.version>
         <jackson.version>2.17.0</jackson.version>
+        <extentreports.version>5.1.1</extentreports.version>
     </properties>
 
     <dependencies>
@@ -61,6 +62,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- ExtentReports 5 — HTML test reports with ExtentSparkReporter -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>${extentreports.version}</version>
         </dependency>
     </dependencies>
 
