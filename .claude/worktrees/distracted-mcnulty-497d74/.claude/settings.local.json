@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Users/2479983/AppData/Local/Programs/**)",
-      "Read(//c/Users/2479983/AppData/Roaming/**)",
-      "Read(//c/Users/2479983/**)"
-    ]
-  }
-}
