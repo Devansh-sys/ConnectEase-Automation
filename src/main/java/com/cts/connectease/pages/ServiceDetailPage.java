@@ -152,7 +152,6 @@ public class ServiceDetailPage {
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].style.outline='3px solid #f59e0b';arguments[0].style.backgroundColor='#fef9c3';", el);
-            Thread.sleep(400);
             js.executeScript("arguments[0].style.outline='';arguments[0].style.backgroundColor='';", el);
         } catch (Exception ignored) {}
     }
@@ -205,7 +204,6 @@ public class ServiceDetailPage {
         try {
             ((JavascriptExecutor) driver)
                     .executeScript("window.scrollTo(0, document.body.scrollHeight / 2)");
-            Thread.sleep(600);
         } catch (Exception ignored) {}
         return findFirst(vendorNameLocators) != null;
     }
@@ -271,7 +269,7 @@ public class ServiceDetailPage {
 
     public String getViewCountText() {
         // Scroll first — view count is often in the sidebar
-        try { ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, 400);"); Thread.sleep(300); } catch (Exception ignored) {}
+        try { ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, 400);"); } catch (Exception ignored) {}
         List<WebElement> els = driver.findElements(viewCountLocator);
         for (WebElement e : els) {
             try { if (e.isDisplayed()) return e.getText().trim(); } catch (Exception ignored) {}

@@ -110,12 +110,10 @@ public class ProfilePageTest extends BaseTest {
 
         // Click Profile Info tab if a tab layout exists
         profilePage.clickTab("Profile Info");
-        pause(500);
 
         profilePage.editFullName("Nav Updated Name");
         profilePage.editPhone("9988776655");
         profilePage.clickSave();
-        pause(2000);
 
         boolean successVisible = profilePage.isSuccessMessageVisible();
         boolean stillOnProfile = profilePage.isOnProfilePage();
@@ -139,13 +137,11 @@ public class ProfilePageTest extends BaseTest {
         profilePage.navigateTo(BASE_URL);
 
         profilePage.clickTab("Change Password");
-        pause(800);
 
         profilePage.fillCurrentPassword(CUSTOMER_PASSWORD);
         profilePage.fillNewPassword("newPass123!");
         profilePage.fillConfirmPassword("differentPass999");
         profilePage.clickChangePassword();
-        pause(1000);
 
         boolean errorVisible = profilePage.isPasswordErrorVisible();
 
@@ -165,13 +161,11 @@ public class ProfilePageTest extends BaseTest {
         profilePage.navigateTo(BASE_URL);
 
         profilePage.clickTab("Change Password");
-        pause(800);
 
         profilePage.fillCurrentPassword("wrongPass123");
         profilePage.fillNewPassword("newPass123!");
         profilePage.fillConfirmPassword("newPass123!");
         profilePage.clickChangePassword();
-        pause(1500);
 
         boolean errorVisible = profilePage.isPasswordErrorVisible() || profilePage.isErrorToastVisible();
 
@@ -191,12 +185,10 @@ public class ProfilePageTest extends BaseTest {
         profilePage.navigateTo(BASE_URL);
 
         profilePage.clickTab("Danger Zone");
-        pause(800);
 
         // Scroll to bottom where danger zone typically lives
         ((org.openqa.selenium.JavascriptExecutor) driver)
                 .executeScript("window.scrollTo(0, document.body.scrollHeight)");
-        pause(500);
 
         boolean dangerVisible  = profilePage.isDangerZoneVisible();
         boolean deleteVisible  = profilePage.isDeleteAccountButtonVisible();

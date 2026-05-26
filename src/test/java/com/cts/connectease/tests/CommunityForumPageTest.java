@@ -74,7 +74,6 @@ public class CommunityForumPageTest extends BaseTest {
 
         if (filterVisible) {
             forumPage.clickCategoryFilter("General");
-            pause(1200);
 
             int countAfter = forumPage.getPostCount();
             System.out.println("   Post count after clicking first filter = " + countAfter);
@@ -110,7 +109,6 @@ public class CommunityForumPageTest extends BaseTest {
         if (!visibleAsUser) {
             ((org.openqa.selenium.JavascriptExecutor) driver)
                     .executeScript("window.scrollTo(0, document.body.scrollHeight)");
-            pause(800);
             visibleAsUser = forumPage.isCreatePostButtonVisible();
         }
 
@@ -139,7 +137,6 @@ public class CommunityForumPageTest extends BaseTest {
 
         System.out.println("   Clicking 'Write a Post' / 'Create Post' button...");
         forumPage.clickCreatePost();
-        pause(1000);
 
         boolean formVisible = forumPage.isPostFormVisible();
         System.out.println("   Post form / modal visible = " + formVisible);
@@ -152,7 +149,6 @@ public class CommunityForumPageTest extends BaseTest {
         // Try to submit empty form to trigger validation
         System.out.println("   Submitting empty form to trigger mandatory-field validation...");
         forumPage.submitEmptyPostForm();
-        pause(800);
 
         boolean stillOnPage = forumPage.isOnCommunityPage() || forumPage.isPostFormVisible();
 
@@ -267,7 +263,6 @@ public class CommunityForumPageTest extends BaseTest {
 
         System.out.println("   Clicking Edit on first visible post...");
         forumPage.clickEditOnFirstPost();
-        pause(1000);
 
         boolean formVisible = forumPage.isPostFormVisible();
         String  titleValue  = forumPage.getPostFormTitleValue();
@@ -284,7 +279,6 @@ public class CommunityForumPageTest extends BaseTest {
             String updatedTitle = "Updated Post " + System.currentTimeMillis();
             forumPage.fillPostForm(updatedTitle, "", "");
             forumPage.submitPost();
-            pause(1500);
 
             boolean successVisible = forumPage.isSuccessMessageVisible();
             System.out.println("   Success message after update = " + successVisible);
@@ -313,7 +307,6 @@ public class CommunityForumPageTest extends BaseTest {
 
         System.out.println("   Clicking Delete on first visible post...");
         forumPage.clickDeleteOnFirstPost();
-        pause(800);
 
         boolean confirmVisible = forumPage.isDeleteConfirmationVisible();
         System.out.println("   Delete confirmation visible = " + confirmVisible);
@@ -321,7 +314,6 @@ public class CommunityForumPageTest extends BaseTest {
         if (confirmVisible) {
             System.out.println("   Confirming deletion...");
             forumPage.confirmDeletion();
-            pause(1500);
         } else {
             System.out.println("⚠ CE-FE-COM-TC009: Confirmation dialog not detected — "
                     + "deletion may proceed directly or use an unrecognised dialog");

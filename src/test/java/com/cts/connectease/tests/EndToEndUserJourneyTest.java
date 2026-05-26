@@ -91,10 +91,8 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         clearSession();
         signupPage.navigateToSignup();
-        pause(1000);
 
         signupPage.signup(E2E_NAME, E2E_EMAIL, E2E_PASSWORD, E2E_PHONE);
-        pause(2500);
 
         String currentUrl  = signupPage.getCurrentUrl();
         boolean redirected = !currentUrl.contains("/signup");
@@ -155,7 +153,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         // Browse: navigate to /services
         listingsPage.navigateTo(BASE_URL);
-        pause(1000);
 
         Assert.assertTrue(listingsPage.isOnServicesPage(),
             "Should be on /services. URL: " + driver.getCurrentUrl());
@@ -192,8 +189,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
             System.out.println("⚠ CE-E2E-TS-03: None of the known sort labels matched — checking cards still visible");
         }
 
-        pause(1500);
-
         int cardCount          = listingsPage.getServiceCardCount();
         List<String> priceTexts = listingsPage.getCardPriceTexts();
 
@@ -214,7 +209,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         System.out.println("▶ CE-E2E-TS-04: AI-search — 'plumbing services in siruseri'");
 
         aiChatPage.navigateTo(BASE_URL);
-        pause(1000);
 
         Assert.assertTrue(aiChatPage.isOnAiChatPage(),
             "Should be on /ai-chat. Actual: " + driver.getCurrentUrl());
@@ -229,7 +223,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         // AI calls can be slow — wait up to 30 s
         boolean gotResponse = aiChatPage.waitForAiResponse(countBefore);
-        pause(1500);
 
         int    countAfter    = aiChatPage.getAiResponseCount();
         String lastResponse  = aiChatPage.getLastAiResponseText();
@@ -267,7 +260,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         forumPage.navigateTo(BASE_URL);
-        pause(1000);
 
         Assert.assertTrue(forumPage.isOnCommunityPage(),
             "Should be on /community. URL: " + driver.getCurrentUrl());
@@ -284,7 +276,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         forumPage.clickCreatePost();
-        pause(1000);
 
         String postTitle = "E2E Selenium Post " + System.currentTimeMillis();
         forumPage.fillPostForm(
@@ -292,10 +283,8 @@ public class EndToEndUserJourneyTest extends BaseTest {
             "This post was written by the End-to-End Selenium automation test suite to validate the post-creation flow.",
             "General"
         );
-        pause(500);
 
         forumPage.submitPost();
-        pause(2500);
 
         boolean successShown = forumPage.isSuccessMessageVisible();
         boolean stillOnForum = forumPage.isOnCommunityPage();
@@ -325,7 +314,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         chatPage.navigateTo(BASE_URL);
-        pause(1500);
 
         Assert.assertTrue(chatPage.isOnChatPage(),
             "Should be on /chats. URL: " + driver.getCurrentUrl());
@@ -337,24 +325,20 @@ public class EndToEndUserJourneyTest extends BaseTest {
         if (sessionCount == 0) {
             System.out.println("   No existing chats — initiating a session from /services...");
             listingsPage.navigateTo(BASE_URL);
-            pause(1000);
 
             if (listingsPage.hasServiceCards()) {
                 listingsPage.clickFirstServiceCard();
                 try { longWait.until(ExpectedConditions.urlContains("/services/")); } catch (Exception ignored) {}
-                pause(1000);
 
                 if (detailPage.isChatWithVendorButtonVisible()) {
                     detailPage.clickChatWithVendor();
                     try { longWait.until(ExpectedConditions.urlContains("/chats")); } catch (Exception ignored) {}
-                    pause(1500);
                 }
             }
 
             // Return to /chats if we ended up elsewhere
             if (!chatPage.isOnChatPage()) {
                 chatPage.navigateTo(BASE_URL);
-                pause(1000);
             }
             sessionCount = chatPage.getChatSessionCount();
             System.out.println("   Sessions after initiation attempt: " + sessionCount);
@@ -370,7 +354,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         // Open the first session
         chatPage.openFirstSession();
-        pause(1500);
 
         boolean paneVisible = chatPage.isConversationPaneVisible();
         System.out.println("   Conversation pane visible: " + paneVisible);
@@ -383,7 +366,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         chatPage.sendMessage("are you available to talk");
         System.out.println("   Message sent: 'are you available to talk'");
-        pause(2000);
 
         int msgAfter = chatPage.getMessageCount();
         System.out.println("   Message count after send : " + msgAfter);
@@ -417,14 +399,12 @@ public class EndToEndUserJourneyTest extends BaseTest {
             loginPage.login(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
             longWait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
             driver.get(BASE_URL);
-            pause(1000);
         }
 
         Assert.assertTrue(navbarPage.isAvatarVisible(),
             "Avatar must be visible before sign-out begins");
 
         navbarPage.clickSignOut();
-        pause(1000);
 
         // Wait for the app to complete the logout redirect
         try {
@@ -437,7 +417,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         try {
             longWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.btn-signin")));
         } catch (Exception ignored) {}
-        pause(500);
 
         Assert.assertTrue(navbarPage.isSignInVisible(),
             "Sign In button must reappear after sign-out");
@@ -509,11 +488,9 @@ public class EndToEndUserJourneyTest extends BaseTest {
 
         // Navigate to Add Service tab
         dashboardPage.clickTab("Add Service");
-        pause(1000);
 
         if (!dashboardPage.isAddServiceFormVisible()) {
             dashboardPage.clickAddService();
-            pause(800);
         }
 
         createdServiceName = "E2E Selenium Service " + System.currentTimeMillis();
@@ -526,7 +503,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         dashboardPage.fillImageUrl("https://placehold.co/400x300");
 
         dashboardPage.clickSubmitService();
-        pause(2500);
 
         boolean toastVisible = dashboardPage.isSuccessToastVisible();
         boolean onDashboard  = dashboardPage.isDashboardDisplayed();
@@ -555,7 +531,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         dashboardPage.clickTab("My Listings");
-        pause(1500);
 
         int listingCount = dashboardPage.getMyListingCount();
         System.out.println("   My Listings count: " + listingCount);
@@ -595,7 +570,6 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         dashboardPage.clickEditOnFirstListing();
-        pause(1500);
 
         boolean editFormVisible = dashboardPage.isAddServiceFormVisible();
         System.out.println("   Edit form visible: " + editFormVisible);
@@ -607,10 +581,8 @@ public class EndToEndUserJourneyTest extends BaseTest {
             System.out.println("   Updating service name to: '" + updatedName + "'");
             dashboardPage.fillServiceName(updatedName);
             dashboardPage.fillServicePrice("599");
-            pause(500);
 
             dashboardPage.clickSubmitService();
-            pause(2000);
 
             boolean editToast    = dashboardPage.isSuccessToastVisible();
             boolean dashVisible  = dashboardPage.isDashboardDisplayed();

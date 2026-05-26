@@ -142,7 +142,7 @@ public class CommunityForumPage {
 
     public CommunityForumPage(WebDriver driver) {
         this.driver = driver;
-        this.wait   = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait   = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
     // ── Visual helper ─────────────────────────────────────────────────────────
@@ -151,7 +151,6 @@ public class CommunityForumPage {
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].style.outline='3px solid #f59e0b';arguments[0].style.backgroundColor='#fef9c3';", el);
-            Thread.sleep(400);
             js.executeScript("arguments[0].style.outline='';arguments[0].style.backgroundColor='';", el);
         } catch (Exception ignored) {}
     }
@@ -354,7 +353,7 @@ public class CommunityForumPage {
         try {
             return wait.until(d -> {
                 List<WebElement> els = d.findElements(By.xpath(
-                    "//*[contains(@class,'success') or contains(@class,'toast') or contains(@class,'alert-success')]"));
+                    "//*[contains(@class,'success') or contains(@class,'toast') or contains(@class,'alert-success') or contains(@class,'Toastify') or contains(@class,'notification') or contains(@class,'snackbar')]"));
                 return els.stream().anyMatch(e -> {
                     try { return e.isDisplayed(); } catch (Exception ex) { return false; }
                 });

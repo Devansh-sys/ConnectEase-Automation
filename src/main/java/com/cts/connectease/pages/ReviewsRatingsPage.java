@@ -102,7 +102,6 @@ public class ReviewsRatingsPage {
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].style.outline='3px solid #f59e0b';arguments[0].style.backgroundColor='#fef9c3';", el);
-            Thread.sleep(400);
             js.executeScript("arguments[0].style.outline='';arguments[0].style.backgroundColor='';", el);
         } catch (Exception ignored) {}
     }
@@ -126,9 +125,8 @@ public class ReviewsRatingsPage {
             WebElement reviewSection = driver.findElement(
                 By.cssSelector(".reviews, .review-section, [class*='review']"));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", reviewSection);
-            Thread.sleep(500);
         } catch (Exception e) {
-            try { ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight * 0.7);"); Thread.sleep(500); }
+            try { ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight * 0.7);"); }
             catch (Exception ignored) {}
         }
     }

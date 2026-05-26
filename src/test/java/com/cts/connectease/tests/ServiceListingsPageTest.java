@@ -60,7 +60,6 @@ public class ServiceListingsPageTest extends BaseTest {
         System.out.println("   Category nav bar visible = " + navVisible);
 
         listingsPage.clickCategoryInNavBar("Plumber");
-        pause(1500);
 
         boolean hasCards  = listingsPage.hasServiceCards();
         boolean noResults = listingsPage.isNoResultsVisible();
@@ -85,7 +84,6 @@ public class ServiceListingsPageTest extends BaseTest {
         }
 
         listingsPage.selectSortOption("Price Low to High");
-        pause(1500);
 
         Assert.assertTrue(listingsPage.isOnServicesPage(),
                 "Should remain on /services after sort");
@@ -104,7 +102,6 @@ public class ServiceListingsPageTest extends BaseTest {
         System.out.println("   Area visible before city select = " + areaBefore);
 
         listingsPage.selectCity("Hyderabad");
-        pause(1000);
 
         boolean areaAfter = listingsPage.isAreaDropdownVisible();
         System.out.println("   Area visible after city select  = " + areaAfter);
@@ -124,7 +121,6 @@ public class ServiceListingsPageTest extends BaseTest {
         int baseline = listingsPage.getServiceCardCount();
 
         listingsPage.clickCategoryInNavBar("Plumber");
-        pause(1000);
 
         if (!listingsPage.isResetFiltersButtonVisible()) {
             System.out.println("⚠ CE-FE-LIST-TC005 SKIPPED: Reset button not visible");
@@ -132,7 +128,6 @@ public class ServiceListingsPageTest extends BaseTest {
         }
 
         listingsPage.clickResetFilters();
-        pause(1500);
         int afterReset = listingsPage.getServiceCardCount();
 
         Assert.assertTrue(listingsPage.isOnServicesPage(), "Should remain on /services");
@@ -164,7 +159,6 @@ public class ServiceListingsPageTest extends BaseTest {
         System.out.println("▶ CE-FE-LIST-TC007: Filtering PG/Hostel category...");
         listingsPage.navigateTo(BASE_URL);
         listingsPage.clickCategoryInNavBar("PG");
-        pause(1500);
 
         if (!listingsPage.hasServiceCards()) {
             System.out.println("⚠ CE-FE-LIST-TC007 SKIPPED: No PG/Hostel cards found");
@@ -206,7 +200,6 @@ public class ServiceListingsPageTest extends BaseTest {
     public void testVendorModeBannerAndHiddenCategoryNav() {
         System.out.println("▶ CE-FE-LIST-TC009: Loading /services?vendor=1...");
         listingsPage.navigateWithVendorFilter(BASE_URL, "1");
-        pause(1000);
 
         boolean banner    = listingsPage.isVendorModeBannerVisible();
         boolean urlVendor = driver.getCurrentUrl().contains("vendor=");
@@ -223,7 +216,6 @@ public class ServiceListingsPageTest extends BaseTest {
     public void testViewAllServicesLinkResetsVendorMode() {
         System.out.println("▶ CE-FE-LIST-TC010: Clicking 'View All Services' to exit vendor mode...");
         listingsPage.navigateWithVendorFilter(BASE_URL, "1");
-        pause(1000);
 
         if (!listingsPage.isViewAllServicesLinkVisible()) {
             System.out.println("⚠ CE-FE-LIST-TC010 SKIPPED: View All Services link not found");
@@ -231,7 +223,6 @@ public class ServiceListingsPageTest extends BaseTest {
         }
 
         listingsPage.clickViewAllServices();
-        pause(1000);
 
         boolean vendorGone = !driver.getCurrentUrl().contains("vendor=");
         System.out.println((vendorGone ? "✔" : "⚠")
@@ -247,7 +238,6 @@ public class ServiceListingsPageTest extends BaseTest {
     public void testNoServicesFoundEmptyState() {
         System.out.println("▶ CE-FE-LIST-TC011: Applying impossible filter categoryId=99999...");
         listingsPage.navigateWithCategoryFilter(BASE_URL, "99999");
-        pause(1500);
 
         boolean hasCards  = listingsPage.hasServiceCards();
         boolean noResults = listingsPage.isNoResultsVisible();

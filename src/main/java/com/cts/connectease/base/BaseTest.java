@@ -9,7 +9,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 
 import java.time.Duration;
@@ -62,15 +61,6 @@ public class BaseTest {
     }
 
     /**
-     * Pauses 2 seconds after every test method so you can see the result
-     * before the next test starts. The browser stays open.
-     */
-    @AfterMethod
-    public void afterEachTest() {
-        pause(2000);
-    }
-
-    /**
      * Closes the browser after all tests in the class have finished.
      */
     @AfterClass
@@ -95,7 +85,6 @@ public class BaseTest {
                 "arguments[0].style.backgroundColor='#fef9c3';" +
                 "arguments[0].style.transition='all 0.1s';",
                 element);
-            Thread.sleep(400);
             js.executeScript(
                 "arguments[0].style.outline='';" +
                 "arguments[0].style.backgroundColor='';",

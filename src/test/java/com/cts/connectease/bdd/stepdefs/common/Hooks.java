@@ -70,11 +70,11 @@ public class Hooks {
         ctx.quitDriver();
     }
 
-    @AfterStep
-    public void visualPause(Scenario scenario) {
-        if ("true".equalsIgnoreCase(System.getProperty("visualPause", "true"))
-                && !scenario.isFailed()) {
-            TestContext.pause(500);
-        }
-    }
+//    @AfterStep
+//    public void visualPause(Scenario scenario) {
+//        if ("true".equalsIgnoreCase(System.getProperty("visualPause", "true"))
+//                && !scenario.isFailed()) {
+//            TestContext.pause(500);
+//        }
+//    }
 }

@@ -140,7 +140,6 @@ public class VendorDashboardPageTest extends BaseTest {
         } catch (Exception e) {
             dashboardPage.clickTab("listings");
         }
-        pause(1000);
 
         Assert.assertTrue(dashboardPage.isOnVendorDashboard(),
                 "Should still be on /vendor/dashboard after clicking My Listings tab. Actual: " + driver.getCurrentUrl());
@@ -161,17 +160,14 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("Add Service");
-        pause(1000);
 
         // Ensure the form is visible; if not, try clicking the Add Service action button
         if (!dashboardPage.isAddServiceFormVisible()) {
             dashboardPage.clickAddService();
-            pause(500);
         }
 
         // Submit without filling any fields
         dashboardPage.clickSubmitService();
-        pause(1000);
 
         boolean validationVisible = dashboardPage.isValidationErrorVisible();
         System.out.println("  Validation error(s) visible: " + validationVisible);
@@ -197,11 +193,9 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("Add Service");
-        pause(1000);
 
         if (!dashboardPage.isAddServiceFormVisible()) {
             dashboardPage.clickAddService();
-            pause(500);
         }
 
         String uniqueName = "Selenium Test Service " + System.currentTimeMillis();
@@ -210,7 +204,6 @@ public class VendorDashboardPageTest extends BaseTest {
         dashboardPage.fillServiceDescription("Test service created by Selenium automation");
         dashboardPage.fillImageUrl("https://placehold.co/400x300");
         dashboardPage.clickSubmitService();
-        pause(2000);
 
         boolean toastVisible   = dashboardPage.isSuccessToastVisible();
         boolean stillOnDash    = dashboardPage.isOnVendorDashboard();
@@ -243,11 +236,9 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("Add Service");
-        pause(1000);
 
         if (!dashboardPage.isAddServiceFormVisible()) {
             dashboardPage.clickAddService();
-            pause(500);
         }
 
         // Fill only name and price — intentionally omit image URL
@@ -256,7 +247,6 @@ public class VendorDashboardPageTest extends BaseTest {
         dashboardPage.fillServicePrice("150");
         // Description is also optional — leave blank to focus on the image default
         dashboardPage.clickSubmitService();
-        pause(2000);
 
         boolean toastVisible = dashboardPage.isSuccessToastVisible();
         boolean onDashboard  = dashboardPage.isDashboardDisplayed();
@@ -286,7 +276,6 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
-        pause(1000);
 
         if (!dashboardPage.hasListings()) {
             System.out.println("⚠ CE-FE-VEND-TC007: No listings found for this vendor — skipping edit test");
@@ -297,7 +286,6 @@ public class VendorDashboardPageTest extends BaseTest {
         }
 
         dashboardPage.clickEditOnFirstListing();
-        pause(1000);
 
         boolean formVisible      = dashboardPage.isAddServiceFormVisible();
         boolean dashboardVisible = dashboardPage.isDashboardDisplayed();
@@ -325,7 +313,6 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
-        pause(1000);
 
         int beforeCount = dashboardPage.getMyListingCount();
         System.out.println("  Listing count before delete: " + beforeCount);
@@ -339,14 +326,12 @@ public class VendorDashboardPageTest extends BaseTest {
         }
 
         dashboardPage.clickDeleteOnFirstListing();
-        pause(800);
 
         boolean confirmVisible = dashboardPage.isDeleteConfirmationVisible();
         System.out.println("  Delete confirmation visible: " + confirmVisible);
 
         if (confirmVisible) {
             dashboardPage.confirmDelete();
-            pause(1500);
 
             boolean toastVisible = dashboardPage.isSuccessToastVisible();
             int afterCount       = dashboardPage.getMyListingCount();
@@ -381,7 +366,6 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
-        pause(1000);
 
         if (!dashboardPage.hasListings()) {
             System.out.println("⚠ CE-FE-VEND-TC009: No listings found for this vendor — skipping toggle test");
@@ -392,7 +376,6 @@ public class VendorDashboardPageTest extends BaseTest {
         }
 
         dashboardPage.clickToggleOnFirstListing();
-        pause(1500);
 
         boolean hasInactive = dashboardPage.hasInactiveListing();
         System.out.println("  Inactive listing indicator visible: " + hasInactive);

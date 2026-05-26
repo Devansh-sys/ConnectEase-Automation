@@ -118,8 +118,6 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(1000);
-
         boolean galleryVisible = detailPage.isImageGalleryVisible();
         System.out.println("   Image gallery visible = " + galleryVisible);
 
@@ -129,7 +127,6 @@ public class ServiceDetailPageTest extends BaseTest {
         if (thumbnailCount >= 2) {
             System.out.println("   Clicking thumbnail at index 1...");
             detailPage.clickThumbnailByIndex(1);
-            pause(800);
             System.out.println("✔ CE-FE-SERV-TC002: Thumbnail clicked — primary image should have switched");
         } else {
             System.out.println("⚠ CE-FE-SERV-TC002: Less than 2 thumbnails found (" + thumbnailCount
@@ -154,8 +151,6 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(800);
-
         String priceLabel = detailPage.getPriceLabelText();
 
         Assert.assertFalse(priceLabel.isEmpty(),
@@ -178,15 +173,12 @@ public class ServiceDetailPageTest extends BaseTest {
         System.out.println("▶ CE-FE-SERV-TC004: Logging in as customer and opening service detail...");
 
         loginAsCustomer();
-        pause(1000);
 
         boolean opened = openFirstServiceDetail();
         if (!opened) {
             System.out.println("⚠ CE-FE-SERV-TC004 SKIPPED: No service cards found after login");
             return;
         }
-
-        pause(1000);
 
         Assert.assertTrue(detailPage.isPageDisplayed(),
                 "Service detail page must be displayed for authenticated customer. URL: " + driver.getCurrentUrl());
@@ -209,7 +201,6 @@ public class ServiceDetailPageTest extends BaseTest {
         System.out.println("▶ CE-FE-SERV-TC005: As guest, clicking 'Chat with Vendor'...");
 
         clearSession();
-        pause(500);
 
         boolean opened = openFirstServiceDetail();
         if (!opened) {
@@ -217,14 +208,11 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(1000);
-
         boolean chatVisible = detailPage.isChatWithVendorButtonVisible();
         System.out.println("   Chat button visible (guest) = " + chatVisible);
 
         if (chatVisible) {
             detailPage.clickChatWithVendor();
-            pause(1000);
 
             try {
                 longWait.until(ExpectedConditions.or(
@@ -257,7 +245,6 @@ public class ServiceDetailPageTest extends BaseTest {
         System.out.println("▶ CE-FE-SERV-TC006: Logging in as customer, then clicking 'Chat with Vendor'...");
 
         loginAsCustomer();
-        pause(1000);
 
         boolean opened = openFirstServiceDetail();
         if (!opened) {
@@ -265,14 +252,11 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(1000);
-
         boolean chatVisible = detailPage.isChatWithVendorButtonVisible();
         System.out.println("   Chat button visible (authenticated) = " + chatVisible);
 
         if (chatVisible) {
             detailPage.clickChatWithVendor();
-            pause(1000);
 
             try {
                 longWait.until(ExpectedConditions.or(
@@ -312,8 +296,6 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(800);
-
         String viewCountText = detailPage.getViewCountText();
 
         if (!viewCountText.isEmpty()) {
@@ -341,8 +323,6 @@ public class ServiceDetailPageTest extends BaseTest {
             return;
         }
 
-        pause(800);
-
         boolean vendorCardVisible = detailPage.isVendorCardVisible();
         System.out.println("   Vendor card visible (initial) = " + vendorCardVisible);
 
@@ -356,7 +336,6 @@ public class ServiceDetailPageTest extends BaseTest {
                 ((org.openqa.selenium.JavascriptExecutor) driver)
                         .executeScript("window.scrollTo(0, document.body.scrollHeight)");
             } catch (Exception ignored) {}
-            pause(1000);
 
             vendorCardVisible = detailPage.isVendorCardVisible();
             seeAllLinkVisible = detailPage.isSeeAllVendorServicesLinkVisible();

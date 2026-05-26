@@ -89,7 +89,6 @@ public class AIChatPage {
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].style.outline='3px solid #f59e0b';arguments[0].style.backgroundColor='#fef9c3';", el);
-            Thread.sleep(400);
             js.executeScript("arguments[0].style.outline='';arguments[0].style.backgroundColor='';", el);
         } catch (Exception ignored) {}
     }

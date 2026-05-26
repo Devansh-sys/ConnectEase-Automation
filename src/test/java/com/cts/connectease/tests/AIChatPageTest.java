@@ -183,8 +183,6 @@ public class AIChatPageTest extends BaseTest {
             return;
         }
 
-        pause(800);
-
         // ── Turn 2: follow-up ──
         int countBeforeFollowUp = aiChatPage.getAiResponseCount();
         System.out.println("   Turn 2 — Sending follow-up: 'What is the price range?'...");

@@ -85,7 +85,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         if (reviewsPage.hasReviews()) {
             int count = reviewsPage.getReviewCount();
@@ -146,13 +145,10 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         if (reviewsPage.isStarPickerVisible()) {
             reviewsPage.hoverStar(3);
-            pause(500);
             reviewsPage.clickStar(5);
-            pause(500);
 
             int    selectedCount = reviewsPage.getSelectedStarCount();
             boolean labelVisible = reviewsPage.isRatingLabelVisible();
@@ -184,7 +180,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         if (reviewsPage.isReviewFormVisible()) {
             boolean submitEnabled = reviewsPage.isSubmitReviewButtonEnabled();
@@ -267,7 +262,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         if (!reviewsPage.isReviewFormVisible()) {
             System.out.println("⚠ CE-FE-REV-TC006 SKIPPED: Review form not visible — user may have already reviewed this service");
@@ -275,7 +269,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.submitReview(5, "Excellent service! Highly recommended.");
-        pause(2000);
 
         boolean toastVisible  = reviewsPage.isSuccessToastVisible();
         boolean formReset     = reviewsPage.isFormResetAfterSubmit();
@@ -307,7 +300,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         boolean deleteVisible = reviewsPage.isDeleteReviewButtonVisible();
 
@@ -338,7 +330,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.scrollToReviews();
-        pause(1000);
 
         String baselineRating = reviewsPage.getAverageRatingText();
         int    countBefore    = reviewsPage.getReviewCount();
@@ -354,7 +345,6 @@ public class ReviewsRatingsPageTest extends BaseTest {
         }
 
         reviewsPage.clickDeleteFirstOwnReview();
-        pause(2000);
 
         int countAfter = reviewsPage.getReviewCount();
 

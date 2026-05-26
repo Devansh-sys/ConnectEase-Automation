@@ -232,7 +232,6 @@ public class CriticalPathSmokeTest extends BaseTest {
         }
 
         homePage.clickSearchButton("plumber in Chennai");
-        pause(1500);
 
         try {
             longWait.until(ExpectedConditions.or(
@@ -359,7 +358,6 @@ public class CriticalPathSmokeTest extends BaseTest {
         // Type a query and submit
         int countBefore = aiChatPage.getAiResponseCount();
         aiChatPage.askQuestion("I need a plumber in Chennai");
-        pause(2000);
 
         // Verify the page did not navigate away and still accepts input
         Assert.assertTrue(aiChatPage.isOnAiChatPage(),
@@ -392,7 +390,6 @@ public class CriticalPathSmokeTest extends BaseTest {
 
         // Step 3: Refresh the page — session should persist
         driver.navigate().refresh();
-        pause(1500);
         try {
             longWait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
         } catch (Exception ignored) {}
@@ -415,7 +412,6 @@ public class CriticalPathSmokeTest extends BaseTest {
             longWait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.cssSelector("a.btn-signin")));
         } catch (Exception ignored) {}
-        pause(800);
 
         // Step 5: Verify guest state restored
         Assert.assertTrue(navbarPage.isSignInVisible(),

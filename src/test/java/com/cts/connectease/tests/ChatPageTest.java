@@ -84,7 +84,6 @@ public class ChatPageTest extends BaseTest {
 
         System.out.println("   Clicking first session in the list...");
         chatPage.openFirstSession();
-        pause(1200);
 
         boolean paneVisible  = chatPage.isConversationPaneVisible();
         boolean inputVisible = chatPage.isMessageInputVisible();
@@ -115,7 +114,6 @@ public class ChatPageTest extends BaseTest {
 
         System.out.println("   Opening first session...");
         chatPage.openFirstSession();
-        pause(1200);
 
         boolean scrolledToBottom = chatPage.isScrolledToLatestMessage();
         int     messageCount     = chatPage.getMessageCount();
@@ -146,7 +144,6 @@ public class ChatPageTest extends BaseTest {
         }
 
         chatPage.openFirstSession();
-        pause(1200);
 
         int  totalMessages    = chatPage.getMessageCount();
         boolean sentVisible   = chatPage.isSentBubbleVisible();
@@ -179,7 +176,6 @@ public class ChatPageTest extends BaseTest {
         }
 
         chatPage.openFirstSession();
-        pause(1000);
 
         if (!chatPage.isMessageInputVisible()) {
             System.out.println("⚠ CE-FE-CHAT-TC005 SKIPPED: Message input not visible after opening session");
@@ -226,7 +222,6 @@ public class ChatPageTest extends BaseTest {
         if (badgeVisible) {
             System.out.println("   Opening session with unread badge...");
             chatPage.openFirstSession();
-            pause(1200);
 
             boolean badgeAfterOpen = chatPage.isUnreadBadgeVisible();
             System.out.println("   Badge still visible after open = " + badgeAfterOpen);
