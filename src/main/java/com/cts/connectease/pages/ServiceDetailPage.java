@@ -19,57 +19,48 @@ public class ServiceDetailPage {
     private final WebDriverWait wait;
 
     // ── Locators ──────────────────────────────────────────────────────────────
+    // Actual Angular classes confirmed from bundle: component uses sd-page / sd-wrap / sd-grid
     private final By[] pageReadyLocators = {
-            By.cssSelector(".service-detail"),
-            By.cssSelector(".service-info"),
-            By.cssSelector("[class*='service-detail']"),
-            By.cssSelector("[class*='service-info']"),
-            By.cssSelector(".detail-page")
-    };
-
-    private final By[] serviceNameLocators = {
-            By.cssSelector(".service-name"),
-            By.cssSelector(".service-detail h1"),
-            By.cssSelector(".service-detail h2"),
-            By.cssSelector("[class*='service-name']"),
+            By.cssSelector(".sd-page"),
+            By.cssSelector(".sd-wrap"),
+            By.cssSelector(".sd-grid"),
+            By.cssSelector(".sd-main"),
+            By.cssSelector(".info-card"),
+            // Generic fallback
             By.cssSelector("h1")
     };
 
+    // Service name is rendered inside .info-header > h1 (confirmed from bundle)
+    private final By[] serviceNameLocators = {
+            By.cssSelector(".info-header h1"),
+            By.cssSelector(".info-card h1"),
+            By.cssSelector(".sd-main h1"),
+            By.cssSelector("h1"),
+            By.cssSelector(".service-name"),
+            By.cssSelector("[class*='service-name']")
+    };
+
     private final By[] priceLocators = {
+            // Actual Angular classes confirmed from bundle
+            By.cssSelector(".price-tag"),
+            By.cssSelector(".price-block"),
+            // Generic fallbacks
             By.cssSelector(".service-price"),
-            By.cssSelector("[class*='price']"),
-            By.xpath("//*[contains(@class,'price')]")
+            By.cssSelector("[class*='price']")
     };
 
     private final By[] vendorNameLocators = {
-            // class-based — vendor / provider / seller / business
+            // Actual Angular classes confirmed from bundle
+            By.cssSelector(".vendor-line"),
+            By.cssSelector(".vendor-card"),
+            By.cssSelector(".vendor-avatar"),
+            // Generic fallbacks
             By.cssSelector(".vendor-name"),
             By.cssSelector("[class*='vendor-name']"),
             By.cssSelector("[class*='vendor']"),
             By.cssSelector(".provider-name"),
             By.cssSelector("[class*='provider']"),
-            By.cssSelector("[class*='seller']"),
-            By.cssSelector("[class*='business']"),
-            By.cssSelector("[class*='owner']"),
-            By.cssSelector("[class*='author']"),
-            // common profile / card sections that contain the provider info
-            By.cssSelector(".vendor-profile"),
-            By.cssSelector(".vendor-card"),
-            By.cssSelector(".provider-card"),
-            By.cssSelector(".service-provider"),
-            By.cssSelector("[class*='profile-card']"),
-            By.cssSelector("[class*='user-info']"),
-            // "By <name>" text — XPath picks up any element whose text starts with "By "
-            By.xpath("//*[starts-with(normalize-space(text()),'By ')]"),
-            By.xpath("//*[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'offered by')]"),
-            By.xpath("//*[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'listed by')]"),
-            By.xpath("//*[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'provided by')]"),
-            // data-attribute patterns
-            By.cssSelector("[data-testid*='vendor']"),
-            By.cssSelector("[data-testid*='provider']"),
-            // avatar / name combination next to the service title (any <p> or <span> inside a card)
-            By.cssSelector(".service-card .name, .service-detail .name"),
-            By.cssSelector("[class*='service'] [class*='name']")
+            By.xpath("//*[starts-with(normalize-space(text()),'By ')]")
     };
 
     private final By[] reviewSectionLocators = {
@@ -111,12 +102,14 @@ public class ServiceDetailPage {
     private final By reviewCards = By.cssSelector(
             ".review-card, [class*='review-card'], .review-item, [class*='review-item']");
 
-    // ── Chat with Vendor button (CE-FE-SERV-TC004 / TC005 / TC006) ───────────
+    // ── Chat with Vendor button ───────────────────────────────────────────────
+    // Actual class confirmed from Angular bundle: .btn-chat  Text: "💬 Chat with Vendor"
     private final By[] chatButtonLocators = {
+            By.cssSelector(".btn-chat"),
+            By.cssSelector("[class*='btn-chat']"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'chat with vendor')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'chat')]"),
-            By.xpath("//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'chat with vendor')]"),
-            By.cssSelector(".chat-vendor-btn, [class*='chat-btn'], [class*='chat-with-vendor']")
+            By.cssSelector(".chat-vendor-btn, [class*='chat-with-vendor']")
     };
 
     // ── View count (CE-FE-SERV-TC007) ────────────────────────────────────────
@@ -180,12 +173,12 @@ public class ServiceDetailPage {
 
     public void navigateTo(String baseUrl, String sid) {
         driver.get(baseUrl + "/services/" + sid);
+        // pageReadyLocators now includes .sd-page which renders immediately (even during loading)
         wait.until(d -> {
             for (By loc : pageReadyLocators) {
                 if (!d.findElements(loc).isEmpty()) return true;
             }
-            // Fallback: any h1 present
-            return !d.findElements(By.cssSelector("h1")).isEmpty();
+            return false;
         });
     }
 

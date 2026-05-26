@@ -9,13 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Real-Time Chat API Tests
- * Module : Real-Time Chat
- * Endpoints: GET /api/chat/start/{participantId} | POST /api/chat/{sessionId}/messages
- *            GET /api/chat/sessions
- * Test cases: CE-CHAT-TC001 to CE-CHAT-TC004
- */
+
 public class ChatApiTest extends BaseApiTest {
 
     // ── CE-CHAT-TC001 ─────────────────────────────────────────────────────────

@@ -40,10 +40,19 @@ public class ExtentReportListener implements ITestListener {
     public void onStart(ITestContext context) {
         String timestamp  = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
         String reportDir  = "test-output/reports/";
+        String screenshotDir = "test-output/screenshots/";
         String reportFile = reportDir + "ConnectEase_Report_" + timestamp + ".html";
 
-        // Ensure the reports directory exists
+        // Delete all files from the previous run before creating this run's report
+        int deletedReports      = cleanDirectory(reportDir);
+        int deletedScreenshots  = cleanDirectory(screenshotDir);
+        System.out.println("[ExtentReportListener] Pre-run cleanup: removed "
+                + deletedReports + " report(s) and "
+                + deletedScreenshots + " screenshot(s) from previous runs.");
+
+        // Ensure directories exist for this run
         new File(reportDir).mkdirs();
+        new File(screenshotDir).mkdirs();
 
         ExtentSparkReporter spark = new ExtentSparkReporter(reportFile);
         spark.config().setDocumentTitle("ConnectEase Frontend Automation Report");
@@ -106,10 +115,8 @@ public class ExtentReportListener implements ITestListener {
                 byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
                 String screenshotDir  = "test-output/screenshots/";
                 String screenshotName = result.getMethod().getMethodName()
-                        + "_" + new SimpleDateFormat("HHmmss").format(new Date()) + ".png";
+                        + "_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + ".png";
                 String screenshotPath = screenshotDir + screenshotName;
-
-                new File(screenshotDir).mkdirs();
                 Files.write(Paths.get(screenshotPath), screenshot);
 
                 test.addScreenCaptureFromPath("../screenshots/" + screenshotName,
@@ -144,6 +151,29 @@ public class ExtentReportListener implements ITestListener {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Deletes every file inside {@code dirPath}.
+     * The directory itself is kept so future mkdirs() calls are idempotent.
+     *
+     * @return number of files deleted
+     */
+    private static int cleanDirectory(String dirPath) {
+        File dir = new File(dirPath);
+        if (!dir.exists()) return 0;
+        int count = 0;
+        File[] files = dir.listFiles();
+        if (files == null) return 0;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                count += cleanDirectory(f.getAbsolutePath());
+                f.delete();
+            } else if (f.delete()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**

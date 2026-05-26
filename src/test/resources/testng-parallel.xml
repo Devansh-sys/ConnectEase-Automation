@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="ConnectEase BDD Parallel Suite" verbose="1" parallel="methods" thread-count="3" data-provider-thread-count="3">
+    <listeners>
+        <listener class-name="org.testng.reporters.EmailableReporter2"/>
+        <listener class-name="com.cts.connectease.bdd.reports.BddSuiteListener"/>
+    </listeners>
+    <test name="Parallel — All Scenarios (max 3 threads)">
+        <classes>
+            <class name="com.cts.connectease.bdd.runners.ParallelTestRunner"/>
+        </classes>
+    </test>
+</suite>

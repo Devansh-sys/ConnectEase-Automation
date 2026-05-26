@@ -9,19 +9,6 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Authentication API Tests
- * Module : Authentication
- * Endpoint base: POST /api/auth/signup | POST /api/auth/signin | POST /api/auth/logout
- * Test cases: CE-AUTH-TC001 to CE-AUTH-TC008
- *
- * NOTE ON IDEMPOTENCY
- * TC001 / TC002 register users that persist in the database. On a re-run the same
- * emails already exist and signup returns 400. Both tests therefore accept EITHER
- * 201 (first run) OR 400-with-"already exists" (subsequent runs) as a PASS.
- * Login tests (TC005 / TC006) are independent of signup — they attempt login
- * directly and work on any run where the user exists.
- */
 public class AuthApiTest extends BaseApiTest {
 
     // ── CE-AUTH-TC001 ─────────────────────────────────────────────────────────

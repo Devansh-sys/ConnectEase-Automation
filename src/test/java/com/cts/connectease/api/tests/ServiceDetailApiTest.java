@@ -11,15 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service Detail & Reviews API Tests
- * Module : Service Detail
- * Endpoints: GET /api/services/{sid} | POST /api/services/{sid}/view | POST /api/services/{sid}/reviews
- * Test cases: CE-SERV-TC001 to CE-SERV-TC005
- */
+
 public class ServiceDetailApiTest extends BaseApiTest {
 
-    /** Ensure testSid is set — fetch from listings if VendorDashboardApiTest did not run. */
     @BeforeClass(alwaysRun = true)
     public void ensureTestSid() {
         if (testSid == null) {

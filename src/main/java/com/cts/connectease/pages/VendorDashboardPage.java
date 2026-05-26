@@ -43,32 +43,42 @@ public class VendorDashboardPage {
             "contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'avg rating')]");
 
     // ── Tab navigation ────────────────────────────────────────────────────────
+    // .nav-item is the actual Angular class (confirmed from bundle)
     private final By tabItems = By.cssSelector(
-            ".tab, .nav-tab, [class*='tab-item'], [role='tab'], .dashboard-tab, " +
+            ".nav-item, .tab, .nav-tab, [class*='tab-item'], [role='tab'], .dashboard-tab, " +
             "[class*='dashboard-nav'] button, [class*='tabs'] button");
 
     // ── My Listings tab (TC003) ───────────────────────────────────────────────
+    // .listing-card is the actual Angular class (confirmed from bundle)
     private final By vendorListingCards = By.cssSelector(
-            ".vendor-service-card, .my-service-card, [class*='vendor-service'], " +
-            ".service-list .card, [class*='service-item'], [class*='listing-card']");
+            ".listing-card, [class*='listing-card'], .vendor-service-card, .my-service-card, " +
+            "[class*='vendor-service'], .service-list .card, [class*='service-item']");
 
     // ── Add Service form (TC004, TC005, TC006) ────────────────────────────────
+    // Actual button text is "Add New Service" — "add service" is NOT a substring of "add new service"
     private final By[] addServiceButtonLocators = {
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add new service')]"),
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'new service')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add service')]"),
-            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add')]"),
             By.xpath("//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add service')]"),
             By.cssSelector("button.add-service, .btn-add, [class*='add-service']"),
             By.cssSelector("a[routerlink*='add'], button[routerlink*='add']")
     };
 
+    // .form-grid and .form-section are actual Angular classes (confirmed from bundle)
     private final By[] serviceFormLocators = {
+            By.cssSelector(".form-grid"),
+            By.cssSelector(".form-section"),
             By.cssSelector("form.service-form"),
             By.cssSelector(".add-service-form"),
             By.cssSelector("[class*='service-form']"),
             By.cssSelector("form")
     };
 
+    // Actual placeholder is "e.g. Home Deep Cleaning" (confirmed from bundle)
     private final By[] serviceNameInputLocators = {
+            By.cssSelector("input[placeholder*='Home Deep Cleaning' i]"),
+            By.cssSelector("input[placeholder*='Deep Cleaning' i]"),
             By.cssSelector("input[name='name']"),
             By.cssSelector("input[name='serviceName']"),
             By.cssSelector("input[name='title']"),
@@ -97,11 +107,15 @@ public class VendorDashboardPage {
             By.cssSelector("input[placeholder*='url' i]")
     };
 
+    // .btn-save is the actual Angular submit button class (confirmed from bundle CSS)
     private final By[] submitServiceLocators = {
+            By.cssSelector(".btn-save"),
+            By.cssSelector("[class*='btn-save']"),
             By.cssSelector("form button[type='submit']"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'submit')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'save')]"),
-            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'create')]")
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'create')]"),
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add')]")
     };
 
     private final By validationErrorLocator = By.cssSelector(
@@ -173,11 +187,14 @@ public class VendorDashboardPage {
 
     public void navigateTo(String baseUrl) {
         driver.get(baseUrl + "/vendor/dashboard");
-        wait.until(d -> {
+        // Wait for URL to confirm Angular route is active; DOM check as secondary signal
+        new WebDriverWait(driver, Duration.ofSeconds(30)).until(d -> {
+            if (!d.getCurrentUrl().contains("/vendor/dashboard")) return false;
             for (By loc : dashboardLocators) {
                 if (!d.findElements(loc).isEmpty()) return true;
             }
-            return false;
+            // URL is correct — accept even if specific DOM classes haven't rendered yet
+            return true;
         });
     }
 

@@ -10,12 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Community Forum API Tests
- * Module : Community Forum
- * Endpoints: GET|POST /api/community | PUT|DELETE /api/community/{postId} | GET /api/community/user/{uid}
- * Test cases: CE-COM-TC001 to CE-COM-TC008
- */
 public class CommunityForumApiTest extends BaseApiTest {
 
     // ── CE-COM-TC001 ─────────────────────────────────────────────────────────

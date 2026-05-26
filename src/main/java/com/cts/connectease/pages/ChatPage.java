@@ -52,6 +52,11 @@ public class ChatPage {
 
     // ── Message input ─────────────────────────────────────────────────────────
     private final By[] messageInputLocators = {
+            // Actual class confirmed from Angular bundle
+            By.cssSelector(".msg-input"),
+            By.cssSelector(".chat-input-bar input"),
+            By.cssSelector("input[placeholder*='Type a message' i]"),
+            // Generic fallbacks
             By.cssSelector("input[placeholder*='message' i]"),
             By.cssSelector("input[placeholder*='type' i]"),
             By.cssSelector("textarea[placeholder*='message' i]"),
@@ -72,7 +77,8 @@ public class ChatPage {
 
     // ── Messages ──────────────────────────────────────────────────────────────
     private final By messages = By.cssSelector(
-            ".message, .chat-message, [class*='message-bubble'], [class*='chat-msg'], .msg");
+            // Actual class confirmed from Angular bundle: msg-row (+ [mine] for sent messages)
+            ".msg-row, .message, .chat-message, [class*='message-bubble'], [class*='chat-msg'], .msg");
 
     private final By sentMessages = By.cssSelector(
             ".message.sent, .message.outgoing, [class*='message-sent'], [class*='sent-message'], " +

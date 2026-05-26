@@ -27,13 +27,16 @@ public class CommunityForumPage {
 
     // ── Create post button ────────────────────────────────────────────────────
     private final By[] createPostButtonLocators = {
-            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'create post')]"),
+            // Actual class confirmed from Angular bundle
+            By.cssSelector(".btn-post"),
+            By.cssSelector("[class*='btn-post']"),
+            // Text-based — button shows "+ Write a Post"
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'write a post')]"),
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'create post')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'new post')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'add post')]"),
             By.xpath("//a[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'create')]"),
-            By.cssSelector(".create-post-btn, .new-post-btn, [class*='create-post'], [class*='write-post']"),
-            By.cssSelector("button.btn-primary, a.btn-primary")
+            By.cssSelector(".create-post-btn, .new-post-btn, [class*='create-post'], [class*='write-post']")
     };
 
     // ── Post form / modal ─────────────────────────────────────────────────────
@@ -46,13 +49,20 @@ public class CommunityForumPage {
     };
 
     private final By[] postTitleInputLocators = {
+            // Actual placeholder confirmed from Angular bundle
+            By.cssSelector("input[placeholder*='What' i][placeholder*='mind' i]"),
+            By.cssSelector("input[maxlength='200']"),
+            // Generic fallbacks
             By.cssSelector("input[name='title']"),
             By.cssSelector("input[placeholder*='title' i]"),
-            By.cssSelector("input[placeholder*='subject' i]"),
-            By.xpath("(//input[@type='text'])[1]")
+            By.cssSelector("input[placeholder*='subject' i]")
     };
 
     private final By[] postDescInputLocators = {
+            // Actual placeholder confirmed from Angular bundle
+            By.cssSelector("textarea[placeholder*='Share your experience' i]"),
+            By.cssSelector("textarea[placeholder*='ask a question' i]"),
+            // Generic fallbacks
             By.cssSelector("textarea[name='description']"),
             By.cssSelector("textarea[name='content']"),
             By.cssSelector("textarea[placeholder*='description' i]"),
@@ -68,10 +78,14 @@ public class CommunityForumPage {
     };
 
     private final By[] submitPostLocators = {
-            By.cssSelector("form button[type='submit']"),
+            // Actual class confirmed from Angular bundle — NOT type='submit'
+            By.cssSelector(".btn-submit"),
+            By.cssSelector("[class*='btn-submit']"),
+            // Text-based fallbacks (button shows "🚀 Post" when creating)
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'post')]"),
             By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'submit')]"),
-            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]")
+            By.xpath("//button[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]"),
+            By.cssSelector("form button[type='submit']")
     };
 
     // ── Edit / Delete buttons ─────────────────────────────────────────────────
@@ -93,10 +107,22 @@ public class CommunityForumPage {
     };
 
     // ── Category filter chips / bubbles ───────────────────────────────────────
+    // XPath text-based locators match the actual button labels shown in the FRD
+    // (All Posts, General, PG/Hostel, Food Service, Electrician, Plumber, Cleaners, Laundry)
+    // regardless of the Angular CSS class name used.
     private final By[] categoryFilterLocators = {
+            // Text-content based — most reliable regardless of CSS class
+            By.xpath("//button[contains(normalize-space(),'All Posts')]"),
+            By.xpath("//button[contains(normalize-space(),'General') or contains(normalize-space(),'PG/Hostel') or contains(normalize-space(),'Food Service')]"),
+            By.xpath("//button[contains(normalize-space(),'Electrician') or contains(normalize-space(),'Plumber') or contains(normalize-space(),'Laundry')]"),
+            // Buttons that follow a "Filter" label (FRD: "Filter by category:")
+            By.xpath("//*[contains(normalize-space(),'Filter by category')]/following-sibling::*//button"),
+            By.xpath("//*[contains(normalize-space(),'Filter by category')]//following-sibling::button"),
+            // Class-based fallbacks
             By.cssSelector(".category-filter, .category-chip, [class*='category-filter'], [class*='category-chip']"),
-            By.cssSelector(".filter-btn, .tag-filter, [class*='filter-tag'], [class*='tag']"),
-            By.cssSelector("button[class*='category'], a[class*='category']")
+            By.cssSelector(".filter-btn, .tag-filter, [class*='filter-tag'], [class*='filter-btn']"),
+            By.cssSelector("button[class*='category'], a[class*='category']"),
+            By.cssSelector("[class*='active'][class*='filter'], [class*='active'][class*='category']")
     };
 
     // ── Post card content ─────────────────────────────────────────────────────

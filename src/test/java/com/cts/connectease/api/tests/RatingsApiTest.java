@@ -8,16 +8,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Ratings API Tests
- * Module : Ratings
- * Endpoints: GET /api/ratings/service/{sid} | DELETE /api/ratings/{rid}
- * Test cases: CE-RATE-TC001 to CE-RATE-TC003
- *
- * NOTE: CE-RATE-TC002 and CE-RATE-TC003 are marked NOT TESTED in the Excel
- * because a known bug (no defect ID yet) causes rid to be null in GET /api/ratings.
- * Those tests are kept here with enabled=false until the mapping bug is fixed.
- */
+
 public class RatingsApiTest extends BaseApiTest {
 
     // ── CE-RATE-TC001 ─────────────────────────────────────────────────────────

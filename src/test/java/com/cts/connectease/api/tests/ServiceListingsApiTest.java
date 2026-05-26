@@ -8,12 +8,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service Listings API Tests
- * Module : Service Listings
- * Endpoints: GET /api/v1/listings/filter | GET /api/services | GET /api/services/vendor/{vendorId}
- * Test cases: CE-LIST-TC001 to CE-LIST-TC006
- */
+
 public class ServiceListingsApiTest extends BaseApiTest {
 
     // ── CE-LIST-TC001 ─────────────────────────────────────────────────────────

@@ -31,6 +31,12 @@ public class AIChatPage {
     };
 
     private final By[] queryInputLocators = {
+            // Actual AI chat input (confirmed from Angular bundle)
+            By.cssSelector(".chat-input-area input"),
+            By.cssSelector("input[placeholder*='Describe' i]"),
+            By.cssSelector("input[placeholder*='looking for' i]"),
+            By.cssSelector("input[placeholder*='Chennai' i]"),
+            // Generic fallbacks
             By.cssSelector("input[placeholder*='ask' i]"),
             By.cssSelector("input[placeholder*='type' i]"),
             By.cssSelector("input[placeholder*='search' i]"),
@@ -55,6 +61,12 @@ public class AIChatPage {
     };
 
     private final By aiResponseMessages = By.cssSelector(
+            // Actual selectors confirmed from Angular bundle:
+            // AI messages: <div class="message-wrapper ai"><div class="bubble">...</div></div>
+            // Typing indicator: <div class="message-wrapper ai"><div class="bubble typing">...</div></div>
+            ".message-wrapper.ai .bubble:not(.typing), " +
+            ".message-wrapper.ai, " +
+            // Generic fallbacks
             ".ai-message, .bot-message, [class*='ai-message'], [class*='bot-message'], " +
             ".response, [class*='response'], .chat-bubble");
 

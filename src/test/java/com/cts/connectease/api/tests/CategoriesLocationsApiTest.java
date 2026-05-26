@@ -7,12 +7,6 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-/**
- * Categories & Locations API Tests
- * Module : Categories & Locations
- * Endpoints: GET /api/categories | GET /api/locations/cities | GET /api/locations/cities/{city}/areas
- * Test cases: CE-CAT-TC001 to CE-CAT-TC003
- */
 public class CategoriesLocationsApiTest extends BaseApiTest {
 
     // ── CE-CAT-TC001 ─────────────────────────────────────────────────────────

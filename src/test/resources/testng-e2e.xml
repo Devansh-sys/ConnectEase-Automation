@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  ConnectEase End-to-End User Journey Test Suite
+  ────────────────────────────────────────────────────────────────────────────
+  Covers the most critical customer + vendor flows in a single ordered run:
+
+    TS-01  Signup with valid credentials
+    TS-02  Login with valid credentials
+    TS-03  Browse /services and sort by Price: Low → High
+    TS-04  AI-search for "plumbing services in siruseri" and validate response
+    TS-05  Community forum: write a new post as authenticated customer
+    TS-06  My Chats: open first session and send "are you available to talk"
+    TS-07  Sign out and verify complete session clearance
+    TS-08  Login as vendor with correct credentials
+    TS-09  Add a new service from the vendor dashboard
+    TS-10  Verify the new service in My Listings and edit it
+
+  Run command:
+      mvn test -Dsurefire.suiteXmlFiles=src/test/resources/testng-e2e.xml
+
+  Prerequisites:
+    • Customer account:  customer.email / customer.password  (config.properties)
+    • Vendor account:    vendor.email   / vendor.password    (config.properties)
+    • Both accounts must exist before running TS-02 onwards.
+      TS-01 creates a fresh account for the signup-flow validation;
+      TS-02 to TS-07 use the pre-seeded customer account (nav@test.com).
+    • Run order is enforced by priority attributes + preserve-order="true".
+
+  Visual observation features:
+    • Chrome opens maximised, never headless
+    • Each interacted element flashes yellow/orange for ~400 ms
+    • Browser pauses 2 s after each test so you can read the result
+-->
+<suite name="ConnectEase End-to-End User Journey Suite" verbose="1" thread-count="1">
+
+    <!--
+      ──────────────────────────────────────────────────────────────────────────
+      End-to-End User Journey Tests  (CE-E2E-TS-01 to CE-E2E-TS-10)
+
+      Single ordered journey:
+        Customer path  — signup → login → browse+sort → AI search →
+                         community post → chat send → sign out
+        Vendor path    — login → add service → verify in My Listings → edit
+      ──────────────────────────────────────────────────────────────────────────
+    -->
+    <test name="End-to-End User Journey Tests — CE-E2E-TS-01 to TS-10" preserve-order="true">
+        <classes>
+            <class name="com.cts.connectease.tests.EndToEndUserJourneyTest">
+                <methods>
+                    <include name="testSignupWithValidCredentials"/>
+                    <include name="testLoginWithValidCredentials"/>
+                    <include name="testBrowseServicesAndSortByPriceLowToHigh"/>
+                    <include name="testAiSearchForPlumbingServicesInSiruseri"/>
+                    <include name="testCommunityWriteNewPost"/>
+                    <include name="testMyChatsSendMessage"/>
+                    <include name="testSignOut"/>
+                    <include name="testLoginAsVendor"/>
+                    <include name="testVendorAddNewService"/>
+                    <include name="testVerifyAndEditNewServiceInMyListings"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

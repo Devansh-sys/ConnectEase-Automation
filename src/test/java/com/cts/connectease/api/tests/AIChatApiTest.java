@@ -8,18 +8,7 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * AI Chat API Tests
- * Module : AI Chat
- * Endpoint: POST /api/v1/ai-chat/ask
- * Test cases: CE-AI-TC001 to CE-AI-TC003
- *
- * FIELD-NAME PROBE
- * The API returns 400 when the body field is "message".  We probe "query",
- * "userMessage", and "prompt" in order (each attempt is logged) so the first
- * 200 response wins and the test passes.  Whatever field name the backend
- * accepts is printed to the console, making it easy to update ApiConstants.
- */
+
 public class AIChatApiTest extends BaseApiTest {
 
     // ── CE-AI-TC001 ──────────────────────────────────────────────────────────
