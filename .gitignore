@@ -33,8 +33,9 @@ build/
 !**/src/test/**/build/
 .claude/
 .idea/
-.test-output/
-
+# Ignore TestNG generated outputs
+test-output/
+target/
 ### VS Code ###
 .vscode/
 
