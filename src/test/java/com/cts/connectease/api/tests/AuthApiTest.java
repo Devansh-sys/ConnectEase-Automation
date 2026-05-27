@@ -2,6 +2,7 @@ package com.cts.connectease.api.tests;
 
 import com.cts.connectease.api.base.ApiConstants;
 import com.cts.connectease.api.base.BaseApiTest;
+import com.cts.connectease.dataprovider.TestDataProvider;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -75,60 +76,70 @@ public class AuthApiTest extends BaseApiTest {
         }
     }
 
-    // ── CE-AUTH-TC003 ─────────────────────────────────────────────────────────
+    // ── CE-AUTH-TC003 / TC004 — Negative signup scenarios (data-driven) ────────
+    //
+    // Replaces two separate hard-coded test methods (signupDuplicateEmail &
+    // signupMissingRequiredField) with a single DataProvider-driven method.
+    //
+    // Test data from Excel: src/test/resources/testdata/ConnectEase_TestData.xlsx
+    //                       Sheet: AuthNegativeData
+    //
+    // MissingField column controls request body construction:
+    //   "none"  → include all fields but use ApiConstants.CUSTOMER_EMAIL (already registered)
+    //             → expects 400 with "Email already exists"
+    //   "email" → omit email field entirely
+    //             → expects 400/403/500 (DEFECT CE-DEF-001)
+    //   "name"  → omit fullName field entirely
+    //             → expects 400/403/500 (DEFECT CE-DEF-001)
     @Test(priority = 3,
-          description = "CE-AUTH-TC003: POST /api/auth/signup — duplicate email returns 400")
-    public void signupDuplicateEmail() {
-        // Customer email is guaranteed to exist after TC001 (first or subsequent run)
+          description = "CE-AUTH-TC003/TC004: POST /api/auth/signup — duplicate email and missing fields (data-driven)",
+          dataProvider = "authNegativeData",
+          dataProviderClass = TestDataProvider.class)
+    public void signupNegativeScenarios(String testCaseId, String fullName, String phone,
+                                        String password, String missingField, String description) {
+        System.out.println("▶ " + testCaseId + ": " + description);
+
         Map<String, Object> body = new HashMap<>();
-        body.put("fullName", "Duplicate User");
-        body.put("email",    ApiConstants.CUSTOMER_EMAIL);  // already registered
-        body.put("password", "anyPass123");
-        body.put("phoneNo",  "9000000001");
         body.put("role",     "customer");
+        body.put("password", password);
+        body.put("phoneNo",  phone);
+
+        // Conditionally include fields based on MissingField column
+        if (!"name".equals(missingField)) {
+            body.put("fullName", fullName);
+        }
+        if ("none".equals(missingField)) {
+            // Duplicate-email scenario: use the pre-registered customer email
+            body.put("email", ApiConstants.CUSTOMER_EMAIL);
+        } else if (!"email".equals(missingField)) {
+            // Missing-name scenario: use a fresh email so only the name is missing
+            body.put("email", "missing.field." + System.currentTimeMillis() + "@test.com");
+        }
+        // When missingField = "email": email key is deliberately absent from body
 
         Response response = noAuth().body(body).when().post("/api/auth/signup")
                                     .then().extract().response();
 
-        System.out.println("[CE-AUTH-TC003] Status : " + response.getStatusCode());
-        System.out.println("[CE-AUTH-TC003] Body   : " + response.getBody().asString());
-
-        Assert.assertEquals(status(response), 400,
-                "Expected 400 Bad Request for duplicate email signup");
-        Assert.assertTrue(response.getBody().asString().contains("Email already exists"),
-                "Expected 'Email already exists' in error message");
-
-        System.out.println("✔ CE-AUTH-TC003 PASSED: Duplicate email correctly rejected with 400");
-    }
-
-    // ── CE-AUTH-TC004 ─────────────────────────────────────────────────────────
-    // KNOWN DEFECT: CE-DEF-001 — API currently returns 403 instead of 400
-    // Test asserts EXPECTED behaviour (400). Will fail until defect is fixed.
-    @Test(priority = 4,
-          description = "CE-AUTH-TC004: POST /api/auth/signup — missing required field returns 400 [DEFECT CE-DEF-001]")
-    public void signupMissingRequiredField() {
-        // email field intentionally omitted
-        Map<String, Object> body = new HashMap<>();
-        body.put("fullName", "Missing Email User");
-        body.put("password", "Test@123");
-        body.put("phoneNo",  "9000000002");
-        body.put("role",     "customer");
-
-        Response response = noAuth().body(body).when().post("/api/auth/signup")
-                                    .then().extract().response();
-
-        System.out.println("[CE-AUTH-TC004] Status : " + response.getStatusCode());
-        System.out.println("[CE-AUTH-TC004] Body   : " + response.getBody().asString());
-
-        // DEFECT CE-DEF-001: API returns 403 instead of 400 for missing/invalid payload.
-        // We accept 400, 403, or 500 here — any of these means the request was rejected
-        // (the bug is the *wrong* code, not that the request was accepted).
         int sc = status(response);
-        Assert.assertTrue(sc == 400 || sc == 403 || sc == 500,
-                "DEFECT CE-DEF-001 — Expected 400 for missing field but got " + sc
-                + ". Root cause: missing global @ExceptionHandler for HttpMessageNotReadableException");
+        System.out.println("   [" + testCaseId + "] Status : " + sc);
+        System.out.println("   [" + testCaseId + "] Body   : " + response.getBody().asString());
 
-        System.out.println("✔ CE-AUTH-TC004 PASSED: Missing field request rejected (status=" + sc + ")");
+        if ("none".equals(missingField)) {
+            // ── Duplicate email: strict 400 + message check ──────────────────
+            Assert.assertEquals(sc, 400,
+                "[" + testCaseId + "] Expected 400 Bad Request for duplicate email. Got: " + sc);
+            Assert.assertTrue(response.getBody().asString().contains("Email already exists"),
+                "[" + testCaseId + "] Expected 'Email already exists' in error body");
+            System.out.println("✔ " + testCaseId + " PASSED: Duplicate email rejected with 400");
+        } else {
+            // ── Missing required field: accept 400/403/500 (DEFECT CE-DEF-001) ─
+            Assert.assertTrue(sc == 400 || sc == 403 || sc == 500,
+                "[" + testCaseId + "] DEFECT CE-DEF-001 — Expected 400 for missing field '"
+                + missingField + "' but got " + sc
+                + ". Root cause: missing global @ExceptionHandler for HttpMessageNotReadableException");
+            System.out.println("✔ " + testCaseId + " PASSED: Missing '" + missingField
+                + "' field request rejected (status=" + sc + ")");
+        }
     }
 
     // ── CE-AUTH-TC005 ─────────────────────────────────────────────────────────

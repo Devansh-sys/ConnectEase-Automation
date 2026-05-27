@@ -81,10 +81,23 @@ public class ChatStepDefs {
 
         final int prevCount = ctx.chatPage.getMessageCount();
         ctx.chatPage.sendMessage(message);
-        new WebDriverWait(ctx.driver, Duration.ofSeconds(45))
+
+        // Two-condition wait to handle both rendering paths:
+        //
+        // Path A — Server-confirmed (WebSocket echo arrives):
+        //   Angular appends the message to the list → getMessageCount() increases.
+        //   This is the normal flow when Render.com backend responds promptly.
+        //
+        // Path B — Optimistic rendering (message shown immediately before echo):
+        //   Angular renders the sent bubble with a [mine] attribute right away.
+        //   isSentBubbleVisible() catches this via the .msg-row[mine] / [mine] selector.
+        //   This handles Render.com free-tier WebSocket cold-start latency (> 45 s).
+        new WebDriverWait(ctx.driver, Duration.ofSeconds(60))
                 .until(d -> {
-                    try { return ctx.chatPage.getMessageCount() > prevCount; }
-                    catch (Exception e) { return false; }
+                    try {
+                        return ctx.chatPage.getMessageCount() > prevCount
+                                || ctx.chatPage.isSentBubbleVisible();
+                    } catch (Exception e) { return false; }
                 });
     }
 

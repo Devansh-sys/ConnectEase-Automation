@@ -6,7 +6,7 @@ Feature: CT_SMOKE_Signup - Signup Page Smoke Tests
     Given the user navigates to the signup page
     When the user fills in valid signup details with name "BDD User" phone "9876543210" email "bdd_smoke_user@test.com" and password "BDD@1234"
     And the user submits the signup form
-    Then the user should be redirected to the home page after signup
+    Then the user should be redirected to the login page after signup
 
   @TC_SIGNUP_02
   Scenario: Signup page loads successfully

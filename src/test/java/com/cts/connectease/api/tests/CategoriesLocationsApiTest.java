@@ -63,7 +63,7 @@ public class CategoriesLocationsApiTest extends BaseApiTest {
           description = "CE-CAT-TC003: GET /api/locations/cities/{city}/areas — returns 200 with area names")
     public void getAreasForCity() {
         // Use the city that has active services (confirmed from actual results: Chennai)
-        String city = "Chennai";
+        String city = "chennai";
 
         Response response = noAuth().when().get("/api/locations/cities/" + city + "/areas")
                                     .then().extract().response();

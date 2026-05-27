@@ -57,10 +57,11 @@ public class ServiceListingsApiTest extends BaseApiTest {
         List<Map<String, Object>> content = response.jsonPath().getList("content");
         Assert.assertNotNull(content, "content array must be present");
 
-        // Verify all returned items belong to Chennai
+        // Verify all returned items belong to Chennai (case-insensitive — DB stores mixed case e.g. "chennai"/"Chennai")
         for (Map<String, Object> item : content) {
-            Assert.assertEquals(item.get("city"), "Chennai",
-                    "All filtered results must have city=Chennai, but found: " + item.get("city"));
+            String cityVal = (String) item.get("city");
+            Assert.assertTrue(cityVal != null && cityVal.equalsIgnoreCase("Chennai"),
+                    "All filtered results must have city=Chennai (case-insensitive), but found: " + cityVal);
         }
 
         System.out.println("✔ CE-LIST-TC002 PASSED: City filter works — " + content.size()
@@ -115,9 +116,10 @@ public class ServiceListingsApiTest extends BaseApiTest {
         Assert.assertNotNull(content, "content array must be present");
 
         for (Map<String, Object> item : content) {
-            // City filter
-            Assert.assertEquals(item.get("city"), "Chennai",
-                    "All results must be from Chennai");
+            // City filter (case-insensitive — DB stores mixed case e.g. "chennai"/"Chennai")
+            String cityVal = (String) item.get("city");
+            Assert.assertTrue(cityVal != null && cityVal.equalsIgnoreCase("Chennai"),
+                    "All results must be from Chennai (case-insensitive), but found: " + cityVal);
             // Price filter
             double price = ((Number) item.get("price")).doubleValue();
             Assert.assertTrue(price <= 5000,

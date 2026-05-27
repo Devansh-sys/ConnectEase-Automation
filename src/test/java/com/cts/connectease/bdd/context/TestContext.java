@@ -15,6 +15,8 @@ import com.cts.connectease.pages.SignupPage;
 import com.cts.connectease.pages.VendorDashboardPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.PageLoadStrategy;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -72,6 +74,10 @@ public class TestContext {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         options.addArguments("--disable-notifications");
+        // EAGER: driver.get() returns on DOMContentLoaded instead of waiting for all
+        // XHR/fetch calls to complete. Prevents "Timed out receiving message from renderer"
+        // on Render.com cold-starts. All step defs use explicit WebDriverWaits anyway.
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
         // Uncomment for headless CI:
         // options.addArguments("--headless=new");
 
@@ -94,7 +100,15 @@ public class TestContext {
         aiChatPage          = new AIChatPage(driver);
         profilePage         = new ProfilePage(driver);
 
-        driver.get(BASE_URL);
+        // Initial navigation — catch renderer timeout (common on Render.com cold-starts).
+        // If it times out here, the Angular app is still loading in the background;
+        // the step-level WebDriverWaits (up to 90 s) handle the actual readiness check.
+        try {
+            driver.get(BASE_URL);
+        } catch (TimeoutException e) {
+            System.out.println("[TestContext] Initial driver.get() timed out — Angular SPA still loading. "
+                    + "Step-level waits will handle readiness. (" + e.getMessage().split("\n")[0] + ")");
+        }
     }
 
     public void quitDriver() {

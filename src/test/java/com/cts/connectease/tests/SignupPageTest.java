@@ -2,6 +2,7 @@ package com.cts.connectease.tests;
 
 import com.cts.connectease.base.BaseTest;
 import com.cts.connectease.constants.AppConstants;
+import com.cts.connectease.dataprovider.TestDataProvider;
 import com.cts.connectease.pages.SignupPage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -77,57 +78,35 @@ public class SignupPageTest extends BaseTest {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // TC_SIGNUP_04 — Empty name
+    // TC_SIGNUP_NEG — Data-driven negative validation (replaces TC_SIGNUP_04/05/06/08)
+    //
+    // Test data from Excel: src/test/resources/testdata/ConnectEase_TestData.xlsx
+    //                       Sheet: SignupNegativeData
+    //
+    // Rows covered:
+    //   TC_SIGNUP_NEG_01 — Empty name
+    //   TC_SIGNUP_NEG_02 — Non-numeric / invalid phone
+    //   TC_SIGNUP_NEG_03 — Malformed email format
+    //   TC_SIGNUP_NEG_04 — Password too short
+    //
+    // @BeforeMethod navigates to /signup before EACH DataProvider row automatically.
     // ─────────────────────────────────────────────────────────────────────────
-    @Test(priority = 4, description = "Verify validation when name field is empty")
-    public void testSignupWithEmptyName() {
-        signupPage.signup(
-                "",
-                "newuser_" + System.currentTimeMillis() + "@example.com",
-                AppConstants.SIGNUP_PASSWORD,
-                AppConstants.SIGNUP_PHONE
-        );
+    @Test(priority = 4,
+          description = "TC_SIGNUP_NEG — Data-driven: empty name / invalid phone / invalid email / weak password",
+          dataProvider = "signupNegativeData",
+          dataProviderClass = TestDataProvider.class)
+    public void testSignupNegativeValidations(String testCaseId, String name, String phone,
+                                              String email, String password, String description) {
+        System.out.println("▶ " + testCaseId + ": " + description);
+
+        signupPage.signup(name, email, password, phone);
 
         boolean blocked = signupPage.getCurrentUrl().contains("signup")
                 || !signupPage.getErrorMessage().isEmpty();
-        Assert.assertTrue(blocked, "Form should not submit with an empty name field");
-        System.out.println("✔ TC_SIGNUP_04 PASSED: Empty name blocked");
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // TC_SIGNUP_05 — Invalid email format
-    // ─────────────────────────────────────────────────────────────────────────
-    @Test(priority = 5, description = "Verify validation for invalid email format")
-    public void testSignupWithInvalidEmail() {
-        signupPage.signup(
-                AppConstants.SIGNUP_NAME,
-                "not-an-email@@bad",
-                AppConstants.SIGNUP_PASSWORD,
-                AppConstants.SIGNUP_PHONE
-        );
-
-        boolean blocked = signupPage.getCurrentUrl().contains("signup")
-                || !signupPage.getErrorMessage().isEmpty();
-        Assert.assertTrue(blocked, "Form should not submit with an invalid email");
-        System.out.println("✔ TC_SIGNUP_05 PASSED: Invalid email blocked");
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // TC_SIGNUP_06 — Empty phone number
-    // ─────────────────────────────────────────────────────────────────────────
-    @Test(priority = 6, description = "Verify validation when phone field is empty")
-    public void testSignupWithEmptyPhone() {
-        signupPage.signup(
-                AppConstants.SIGNUP_NAME,
-                "user_" + System.currentTimeMillis() + "@example.com",
-                AppConstants.SIGNUP_PASSWORD,
-                ""   // empty phone
-        );
-
-        boolean blocked = signupPage.getCurrentUrl().contains("signup")
-                || !signupPage.getErrorMessage().isEmpty();
-        Assert.assertTrue(blocked, "Form should not submit with an empty phone field");
-        System.out.println("✔ TC_SIGNUP_06 PASSED: Empty phone blocked");
+        Assert.assertTrue(blocked,
+                "[" + testCaseId + "] Form should be blocked for invalid input — " + description
+                + " | URL: " + signupPage.getCurrentUrl());
+        System.out.println("✔ " + testCaseId + " PASSED: Signup correctly blocked — " + description);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -141,24 +120,6 @@ public class SignupPageTest extends BaseTest {
                 || !signupPage.getErrorMessage().isEmpty();
         Assert.assertTrue(blocked, "Empty form submission should be blocked");
         System.out.println("✔ TC_SIGNUP_07 PASSED: Empty form blocked");
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // TC_SIGNUP_08 — Weak / short password
-    // ─────────────────────────────────────────────────────────────────────────
-    @Test(priority = 8, description = "Verify weak password is rejected")
-    public void testSignupWithWeakPassword() {
-        signupPage.signup(
-                AppConstants.SIGNUP_NAME,
-                "user_" + System.currentTimeMillis() + "@example.com",
-                "123",
-                AppConstants.SIGNUP_PHONE
-        );
-
-        boolean blocked = signupPage.getCurrentUrl().contains("signup")
-                || !signupPage.getErrorMessage().isEmpty();
-        Assert.assertTrue(blocked, "Form should reject a weak/short password");
-        System.out.println("✔ TC_SIGNUP_08 PASSED: Weak password rejected");
     }
 
     // ─────────────────────────────────────────────────────────────────────────

@@ -23,9 +23,17 @@ public class SignupStepDefs {
 
     @When("the user fills in valid signup details with name {string} phone {string} email {string} and password {string}")
     public void theUserFillsInValidSignupDetails(String name, String phone, String email, String password) {
+        // Append a timestamp to the local part so every run registers a fresh account.
+        // Without this, the second+ run always gets "Email already exists" from the
+        // deployed backend, the form never redirects, and the Then-step times out.
+        // e.g. "bdd_smoke_user@test.com" → "bdd_smoke_user_1748391557123@test.com"
+        String uniqueEmail = email.contains("@")
+                ? email.split("@")[0] + "_" + System.currentTimeMillis() + "@" + email.split("@")[1]
+                : email;
+        System.out.println("   [SignupStepDefs] Using unique email: " + uniqueEmail);
         ctx.signupPage.enterName(name);
         ctx.signupPage.enterPhone(phone);
-        ctx.signupPage.enterEmail(email);
+        ctx.signupPage.enterEmail(uniqueEmail);
         ctx.signupPage.enterPassword(password);
     }
 
@@ -34,13 +42,13 @@ public class SignupStepDefs {
         ctx.signupPage.clickSignupButton();
     }
 
-    @Then("the user should be redirected to the home page after signup")
-    public void theUserShouldBeRedirectedToTheHomePage() {
-        new WebDriverWait(ctx.driver, Duration.ofSeconds(45))
-                .until(d -> {
-                    String url = d.getCurrentUrl();
-                    return url.contains("/home") || url.equals(ctx.BASE_URL + "/");
-                });
+    @Then("the user should be redirected to the login page after signup")
+    public void theUserShouldBeRedirectedToLoginAfterSignup() {
+        // After successful signup the backend returns 201 with NO JWT cookie —
+        // the user is registered but not auto-logged-in. Angular redirects to /login.
+        // 90 s: Render.com free-tier backend may cold-start on the first signup request.
+        new WebDriverWait(ctx.driver, Duration.ofSeconds(90))
+                .until(d -> d.getCurrentUrl().contains("/login"));
     }
 
     @Given("the user is on the signup page")

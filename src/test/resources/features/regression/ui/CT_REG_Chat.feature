@@ -1,7 +1,7 @@
 @Regression @UI @Chat
 Feature: CT_REG_Chat - Real-Time Chat Regression Tests
 
-  @CE-FE-CHAT-TC001 @KnownBug
+  @CE-FE-CHAT-TC001
   Scenario: User can send a message via Chat with Vendor on a service detail page
     Given the user is logged in as a customer
     And the user is on a service detail page

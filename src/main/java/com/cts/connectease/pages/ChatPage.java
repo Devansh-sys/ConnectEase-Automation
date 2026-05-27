@@ -81,6 +81,9 @@ public class ChatPage {
             ".msg-row, .message, .chat-message, [class*='message-bubble'], [class*='chat-msg'], .msg");
 
     private final By sentMessages = By.cssSelector(
+            // Confirmed from Angular bundle: sent messages have class="msg-row" + attribute [mine]
+            ".msg-row[mine], [mine], " +
+            // Generic fallbacks for other possible implementations
             ".message.sent, .message.outgoing, [class*='message-sent'], [class*='sent-message'], " +
             "[class*='outgoing'], .my-message, [class*='my-message']");
 

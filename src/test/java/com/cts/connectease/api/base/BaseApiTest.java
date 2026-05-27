@@ -58,6 +58,7 @@ public class BaseApiTest {
     @BeforeSuite(alwaysRun = true)
     public void globalSetup() {
         RestAssured.baseURI = ApiConstants.BASE_URL;
+        RestAssured.useRelaxedHTTPSValidation();   // Trust Render.com's SSL cert (PKIX fix)
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         serverAvailable = isServerReachable("connectease-1.onrender.com", 443, 10000);

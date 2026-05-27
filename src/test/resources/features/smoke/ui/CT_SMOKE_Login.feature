@@ -16,5 +16,5 @@ Feature: CT_SMOKE_Login - Login Page Smoke Tests
   @CE_FE_TS_06
   Scenario: Successful vendor login
     Given the user is on the login page
-    When the user logs in with email "vishal.vendor@gmail.com" and password "123456"
+    When the user logs in with email "vishal.vendor@gmail.com" and password "123456789"
     Then the user should be redirected to the home page

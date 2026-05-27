@@ -1,6 +1,7 @@
 package com.cts.connectease.tests;
 
 import com.cts.connectease.base.BaseTest;
+import com.cts.connectease.dataprovider.TestDataProvider;
 import com.cts.connectease.pages.LoginPage;
 import com.cts.connectease.pages.NavbarPage;
 import org.openqa.selenium.By;
@@ -89,20 +90,29 @@ public class LoginPageTest extends BaseTest {
     }
 
     // CE_FE_TS_06 — Wrong credentials shows error without redirect
-    @Test(description = "CE_FE_TS_06 - Wrong credentials should show error message and stay on /login")
-    public void testWrongCredentialsShowsError() {
+    // Data-driven via Excel: src/test/resources/testdata/ConnectEase_TestData.xlsx → LoginNegativeData
+    // Runs once per row: unknown user / valid format not registered / correct user wrong password
+    @Test(description = "CE_FE_TS_06 - Wrong credentials should show error message and stay on /login",
+          dataProvider = "loginNegativeData",
+          dataProviderClass = TestDataProvider.class)
+    public void testWrongCredentialsShowsError(String testCaseId, String email,
+                                               String password, String description) {
+        System.out.println("▶ " + testCaseId + ": " + description);
         loginPage.navigateTo(BASE_URL);
-        loginPage.login("wrong@email.com", "wrongpassword");
+        loginPage.login(email, password);
 
         Assert.assertTrue(
             loginPage.isErrorMessageDisplayed(),
-            "Error message should be displayed for wrong credentials"
+            "[" + testCaseId + "] Error message should be displayed for wrong credentials. "
+            + "Email used: " + email
         );
         Assert.assertTrue(
             loginPage.isOnLoginPage(),
-            "User should remain on /login page after failed login"
+            "[" + testCaseId + "] User should remain on /login page after failed login. "
+            + "Email used: " + email
         );
-        System.out.println("✔ CE_FE_TS_06 PASSED: Wrong credentials rejected with error message");
+        System.out.println("✔ CE_FE_TS_06 PASSED [" + testCaseId + "]: "
+            + email + " correctly rejected with error message");
     }
 
     // CE_FE_TS_07 — Logout clears session and redirects to Home
