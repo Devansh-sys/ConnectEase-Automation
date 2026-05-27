@@ -33,6 +33,7 @@ build/
 !**/src/test/**/build/
 .claude/
 .idea/
+.test-output/
 
 ### VS Code ###
 .vscode/

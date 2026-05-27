@@ -93,7 +93,11 @@ public class EndToEndUserJourneyTest extends BaseTest {
         signupPage.navigateToSignup();
 
         signupPage.signup(E2E_NAME, E2E_EMAIL, E2E_PASSWORD, E2E_PHONE);
-
+        longWait.until(ExpectedConditions.or(
+                ExpectedConditions.not(ExpectedConditions.urlContains("/signup")),
+                ExpectedConditions.presenceOfElementLocated(
+                        By.cssSelector("[class*='error'],[class*='Error'],[role='alert']"))
+        ));
         String currentUrl  = signupPage.getCurrentUrl();
         boolean redirected = !currentUrl.contains("/signup");
         String  errorText  = signupPage.getErrorMessage().toLowerCase();
@@ -124,7 +128,7 @@ public class EndToEndUserJourneyTest extends BaseTest {
         loginPage.login(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
 
         longWait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
-
+        System.out.println("login page opened");
         String currentUrl = driver.getCurrentUrl();
         Assert.assertFalse(currentUrl.contains("/login"),
             "Should be redirected away from /login after valid login. Actual: " + currentUrl);
@@ -204,6 +208,7 @@ public class EndToEndUserJourneyTest extends BaseTest {
     // ── TS-04 ─────────────────────────────────────────────────────────────────
 
     @Test(priority = 4,
+          dependsOnMethods = {"testBrowseServicesAndSortByPriceLowToHigh"},
           description = "CE-E2E-TS-04 - AI-search 'plumbing services in siruseri' and validate non-empty response")
     public void testAiSearchForPlumbingServicesInSiruseri() {
         System.out.println("▶ CE-E2E-TS-04: AI-search — 'plumbing services in siruseri'");
@@ -519,6 +524,7 @@ public class EndToEndUserJourneyTest extends BaseTest {
     // ── TS-10 ─────────────────────────────────────────────────────────────────
 
     @Test(priority = 10,
+          dependsOnMethods = {"testVendorAddNewService"},
           description = "CE-E2E-TS-10 - Verify newly added service appears in My Listings and edit it successfully")
     public void testVerifyAndEditNewServiceInMyListings() {
         System.out.println("▶ CE-E2E-TS-10: My Listings — verify '" + createdServiceName + "' and edit it");
@@ -531,6 +537,17 @@ public class EndToEndUserJourneyTest extends BaseTest {
         }
 
         dashboardPage.clickTab("My Listings");
+
+        try {
+            longWait.until(ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".listing-card")),
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector("[class*='listing-card']")),
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector("[class*='service-card']")),
+                ExpectedConditions.presenceOfElementLocated(By.xpath(
+                    "//*[contains(@class,'card')][.//*[contains(translate(" +
+                    "normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'edit')]]"))
+            ));
+        } catch (Exception ignored) {}
 
         int listingCount = dashboardPage.getMyListingCount();
         System.out.println("   My Listings count: " + listingCount);

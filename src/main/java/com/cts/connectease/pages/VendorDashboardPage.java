@@ -52,7 +52,16 @@ public class VendorDashboardPage {
     // .listing-card is the actual Angular class (confirmed from bundle)
     private final By vendorListingCards = By.cssSelector(
             ".listing-card, [class*='listing-card'], .vendor-service-card, .my-service-card, " +
-            "[class*='vendor-service'], .service-list .card, [class*='service-item']");
+            "[class*='vendor-service'], .service-list .card, [class*='service-item'], " +
+            "[class*='service-card'], .listings .card, [class*='my-listing'] .card");
+
+    // Fallback: any card-like element that contains an Edit action (stat cards never have Edit)
+    private final By vendorListingCardsFallback = By.xpath(
+            "//*[contains(@class,'card') or contains(@class,'item') or contains(@class,'listing')]" +
+            "[.//*[contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ'," +
+            "'abcdefghijklmnopqrstuvwxyz'),'edit') or " +
+            "contains(translate(normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ'," +
+            "'abcdefghijklmnopqrstuvwxyz'),'delete')]]");
 
     // ── Add Service form (TC004, TC005, TC006) ────────────────────────────────
     // Actual button text is "Add New Service" — "add service" is NOT a substring of "add new service"
@@ -274,7 +283,11 @@ public class VendorDashboardPage {
     public boolean isMyListingsTabVisible() { return isTabVisible("listings") || isTabVisible("my listing"); }
 
     public int getMyListingCount() {
-        return (int) driver.findElements(vendorListingCards).stream().filter(e -> {
+        long count = driver.findElements(vendorListingCards).stream().filter(e -> {
+            try { return e.isDisplayed(); } catch (Exception ex) { return false; }
+        }).count();
+        if (count > 0) return (int) count;
+        return (int) driver.findElements(vendorListingCardsFallback).stream().filter(e -> {
             try { return e.isDisplayed(); } catch (Exception ex) { return false; }
         }).count();
     }

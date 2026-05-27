@@ -4,6 +4,7 @@ import com.cts.connectease.base.BaseTest;
 import com.cts.connectease.pages.LoginPage;
 import com.cts.connectease.pages.ServiceListingsPage;
 import com.cts.connectease.pages.VendorDashboardPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -74,6 +75,19 @@ public class VendorDashboardPageTest extends BaseTest {
         loginWait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
     }
 
+    private void waitForListingsToLoad() {
+        try {
+            loginWait.until(ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".listing-card")),
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector("[class*='listing-card']")),
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector("[class*='service-card']")),
+                ExpectedConditions.presenceOfElementLocated(By.xpath(
+                    "//*[contains(@class,'card')][.//*[contains(translate(" +
+                    "normalize-space(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'edit')]]"))
+            ));
+        } catch (Exception ignored) {}
+    }
+
     // ── TC001 ─────────────────────────────────────────────────────────────────
 
     @Test(priority = 1,
@@ -140,6 +154,7 @@ public class VendorDashboardPageTest extends BaseTest {
         } catch (Exception e) {
             dashboardPage.clickTab("listings");
         }
+        waitForListingsToLoad();
 
         Assert.assertTrue(dashboardPage.isOnVendorDashboard(),
                 "Should still be on /vendor/dashboard after clicking My Listings tab. Actual: " + driver.getCurrentUrl());
@@ -276,6 +291,7 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
+        waitForListingsToLoad();
 
         if (!dashboardPage.hasListings()) {
             System.out.println("⚠ CE-FE-VEND-TC007: No listings found for this vendor — skipping edit test");
@@ -313,6 +329,7 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
+        waitForListingsToLoad();
 
         int beforeCount = dashboardPage.getMyListingCount();
         System.out.println("  Listing count before delete: " + beforeCount);
@@ -366,6 +383,7 @@ public class VendorDashboardPageTest extends BaseTest {
         loginAsVendor();
 
         dashboardPage.clickTab("My Listings");
+        waitForListingsToLoad();
 
         if (!dashboardPage.hasListings()) {
             System.out.println("⚠ CE-FE-VEND-TC009: No listings found for this vendor — skipping toggle test");

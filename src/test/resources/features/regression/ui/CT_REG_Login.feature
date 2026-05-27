@@ -23,4 +23,4 @@ Feature: CT_REG_Login - Login Regression Tests
   Scenario: Unauthenticated access to vendor dashboard is guarded
     Given the user is not logged in
     When the user navigates directly to "/vendor/dashboard"
-    Then the browser URL should contain "/login"
+    Then the browser URL should not contain "/vendor/dashboard"

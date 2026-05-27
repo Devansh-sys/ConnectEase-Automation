@@ -9,7 +9,7 @@ public class ApiConstants {
     private ApiConstants() {}
 
     // ── Base URL ──────────────────────────────────────────────────────────────
-    public static final String BASE_URL = "http://localhost:8081";
+    public static final String BASE_URL = "https://connectease-1.onrender.com";
 
     // ── Customer credentials ──────────────────────────────────────────────────
     // NOTE: Uses .apitest domain to avoid collisions with Selenium UI test users

@@ -19,6 +19,7 @@
         <restassured.version>5.4.0</restassured.version>
         <jackson.version>2.17.0</jackson.version>
         <extentreports.version>5.1.1</extentreports.version>
+        <suiteFile>testng.xml</suiteFile>
     </properties>
 
     <dependencies>
@@ -98,6 +99,8 @@
         </dependency>
     </dependencies>
 
+
+
     <build>
         <plugins>
             <plugin>
@@ -106,7 +109,7 @@
                 <version>3.2.5</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/${suiteFile}</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>

@@ -44,6 +44,9 @@
         Vendor path    — login → add service → verify in My Listings → edit
       ──────────────────────────────────────────────────────────────────────────
     -->
+    <listeners>
+        <listener class-name="com.cts.connectease.listeners.ExtentReportListener"></listener>
+    </listeners>
     <test name="End-to-End User Journey Tests — CE-E2E-TS-01 to TS-10" preserve-order="true">
         <classes>
             <class name="com.cts.connectease.tests.EndToEndUserJourneyTest">

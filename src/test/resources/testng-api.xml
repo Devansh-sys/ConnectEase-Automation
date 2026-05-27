@@ -4,7 +4,7 @@
 <!--
   ConnectEase Backend API Test Suite
   Source: ConnectEase_Backend_Testing_UPDATED.xlsx
-  Total: 42 test cases across 10 modules
+  Total: 52 active test cases across 10 modules (56 defined, 4 disabled)
   Run order is critical — Auth must run first to populate shared cookies/UIDs.
 -->
 <suite name="ConnectEase Backend API Test Suite" verbose="1" thread-count="1">

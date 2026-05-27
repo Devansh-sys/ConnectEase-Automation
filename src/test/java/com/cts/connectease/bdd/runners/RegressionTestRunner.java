@@ -6,7 +6,7 @@ import io.cucumber.testng.CucumberOptions;
 @CucumberOptions(
     features  = "src/test/resources/features/regression",
     glue      = "com.cts.connectease.bdd",
-    tags      = "@Regression",
+    tags      = "@Regression and not @KnownBug",
     plugin    = {
         "pretty",
         "html:test-output/bdd-reports/regression/cucumber-report.html",

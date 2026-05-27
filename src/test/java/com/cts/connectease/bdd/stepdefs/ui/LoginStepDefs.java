@@ -101,4 +101,10 @@ public class LoginStepDefs {
         new WebDriverWait(ctx.driver, Duration.ofSeconds(45))
                 .until(d -> d.getCurrentUrl().contains(expectedPath));
     }
+
+    @Then("the browser URL should not contain {string}")
+    public void theBrowserUrlShouldNotContain(String forbiddenPath) {
+        new WebDriverWait(ctx.driver, Duration.ofSeconds(45))
+                .until(d -> !d.getCurrentUrl().contains(forbiddenPath));
+    }
 }

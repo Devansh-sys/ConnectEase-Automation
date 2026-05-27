@@ -242,8 +242,11 @@ public class ChatPage {
         WebElement input = findFirst(messageInputLocators);
         if (input != null) {
             highlight(input);
-            input.clear();
-            input.sendKeys(message);
+            // CTRL+A selects any existing text then the message replaces it,
+            // which fires Angular's (input) event and keeps the form model in sync.
+            // input.clear() alone does NOT trigger Angular change detection.
+            input.click();
+            input.sendKeys(Keys.chord(Keys.CONTROL, "a"), message);
 
             WebElement sendBtn = findFirst(sendButtonLocators);
             if (sendBtn != null) {

@@ -60,18 +60,17 @@ public class BaseApiTest {
         RestAssured.baseURI = ApiConstants.BASE_URL;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        serverAvailable = isServerReachable("localhost", 8081, 3000);
+        serverAvailable = isServerReachable("connectease-1.onrender.com", 443, 10000);
 
         if (serverAvailable) {
             System.out.println("\n✔ Backend server is reachable at " + ApiConstants.BASE_URL);
         } else {
             System.err.println("\n");
             System.err.println("╔══════════════════════════════════════════════════════════════╗");
-            System.err.println("║            BACKEND SERVER IS NOT RUNNING                     ║");
+            System.err.println("║         DEPLOYED BACKEND IS NOT REACHABLE                    ║");
             System.err.println("╠══════════════════════════════════════════════════════════════╣");
-            System.err.println("║  URL    : " + ApiConstants.BASE_URL + "                     ║");
-            System.err.println("║  Fix    : Start the Spring Boot backend first, then re-run  ║");
-            System.err.println("║  Command: mvn spring-boot:run  (from the backend project)   ║");
+            System.err.println("║  URL    : " + ApiConstants.BASE_URL + "  ║");
+            System.err.println("║  Fix    : Check network connectivity or Render.com status    ║");
             System.err.println("╚══════════════════════════════════════════════════════════════╝");
             System.err.println();
         }
@@ -86,8 +85,8 @@ public class BaseApiTest {
     public void requireServerRunning() {
         if (!serverAvailable) {
             throw new SkipException(
-                    "SKIPPED — backend server not reachable at " + ApiConstants.BASE_URL
-                    + ". Start the Spring Boot application and re-run.");
+                    "SKIPPED — deployed backend not reachable at " + ApiConstants.BASE_URL
+                    + ". Check network connectivity or Render.com status.");
         }
     }
 
