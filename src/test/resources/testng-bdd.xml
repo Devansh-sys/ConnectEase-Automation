@@ -21,7 +21,7 @@
     </listeners>
 
     <!-- ── Smoke: flip enabled="false" to skip this block ── -->
-    <test name="Smoke — UI and API Tests" preserve-order="true" enabled="false">
+    <test name="Smoke — UI and API Tests" preserve-order="true" enabled="true">
         <classes>
             <class name="com.cts.connectease.bdd.runners.SmokeTestRunner"/>
         </classes>
