@@ -46,8 +46,9 @@ public class Hooks {
                         "Screenshot on failure: " + scenario.getName());
 
                 // 2. Save as dated PNG file
-                String ts = System.getProperty("bdd.run.timestamp",
-                        new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
+                // Per-scenario timestamp (milliseconds) — avoids filename collision
+                // when multiple scenarios fail at the same second in parallel runs.
+                String ts = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS").format(new Date());
                 String safeName = scenario.getName()
                         .replaceAll("[^a-zA-Z0-9_\\-]", "_")
                         .replaceAll("_{2,}", "_");
